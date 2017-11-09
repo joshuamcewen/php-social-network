@@ -15,6 +15,10 @@ if (!isset($_SESSION['loggedInSkeleton']))
 else
 {
 	echo "Implement the global feed here... ";
+
+
+
+	
 	// a little extra text that only the admin will see!:
 	if ($_SESSION['username'] == "admin")
 	{
