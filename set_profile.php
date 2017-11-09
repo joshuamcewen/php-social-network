@@ -29,6 +29,8 @@ $show_profile_form = false;
 // message to output to user:
 $message = "";
 
+$errors = "";
+
 if (!isset($_SESSION['loggedInSkeleton']))
 {
 	// user isn't logged in, display a message saying they must be:
@@ -57,9 +59,30 @@ elseif (isset($_POST['firstname']))
 
 	// SERVER-SIDE VALIDATION CODE MISSING:
 
-	// ...
+	// Validate the first name
+	if(!preg_match('/^[A-Za-z\']{1,40}$/', $firstname)) {
+		$errors .= "First name must be between 1 and 40 characters in length.<br>";
+	}
 
-	$errors = "";
+	// Validate the last name
+	if(!preg_match('/^[A-Za-z\']{1,50}$/', $lastname)) {
+		$errors .= "Last name must be between 1 and 50 characters in length.<br>";
+	}
+
+	// Validate pets
+	if(!preg_match('/^[0-9]{1,4}$/', $pets)) {
+		$errors .= "Number of pets must be between 1 and 4 digits in length.<br>";
+	}
+
+	// Validate email
+	if(!preg_match('/^([A-Za-z_.0-9]+@[A-Za-z_.0-9]+\.[A-Za-z.]{2,4}){1,50}$/', $email)) {
+		$errors .= "Email address must between 1 and 50 character in length and be of a valid format.<br>";
+	}
+
+	// Validate date of birth
+	if(!preg_match('/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/', $dob)) {
+		$errors .= "Date of birth must be in the format YYYY-MM-DD.<br>";
+	}
 
 	// check that all the validation tests passed before going to the database:
 	if ($errors == "")
@@ -213,6 +236,7 @@ echo <<<_END
 			});
 		});
 
+		// When the form is submitted, prevent the submission if there are errors.
 		$('form').submit(function(e){
 			if(errors.length === 0) {
 				return true;
@@ -224,7 +248,9 @@ echo <<<_END
 </script>
 
 <form action="set_profile.php" id="profile_form" method="post">
-	<span class="errors"></span>
+	<span class="errors">
+		$errors
+	</span>
   Update your profile info:<br>
   First name: <input type="text" name="firstname" value="$firstname">
   <br>
