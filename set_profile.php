@@ -169,10 +169,62 @@ else
 if ($show_profile_form)
 {
 echo <<<_END
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
 
-<!-- CLIENT-SIDE VALIDATION MISSING -->
+<script type="text/javascript">
 
-<form action="set_profile.php" method="post">
+	var errors = [];
+
+	function validateInput(value, pattern, message){
+		if(!value.match(pattern)) {
+			errors.push(message);
+		}
+	}
+
+	$(document).ready(function(){
+		$('form').keyup(function(){
+			// Clear errors to prevent duplication
+			errors = [];
+
+			// Clear errors from display
+			$('span.errors').html("");
+
+			// Validate the first name
+			validateInput($('input[name=firstname]').val(), /^[A-Za-z']{1,40}$/, "First name must be between 1 and 40 characters in length.");
+
+			// Validate the last name
+			validateInput($('input[name=lastname]').val(), /^[A-Za-z']{1,40}$/, "Last name must be between 1 and 50 characters in length.");
+
+			// Validate the number of pets
+			validateInput($('input[name=pets]').val(), /^[0-9]{1,4}$/, "Number of pets must be between 1 and 4 digits in length.");
+
+			// Validate the email address
+			validateInput($('input[name=email]').val(), /^([A-Za-z_.0-9]+@[A-Za-z_.0-9]+\.[A-Za-z.]{2,4}){1,50}$/, "Email address must between 1 and 50 character in length and be of a valid format.");
+
+			// Validate the date of birth
+			validateInput($('input[name=dob]').val(), /^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/, "Date of birth must be in the format YYYY-MM-DD.");
+
+			// For each error that has been presented, display at the top of form
+			$.each(errors, function(index, value){
+				$('span.errors').append(value + "<br>");
+			});
+		});
+
+		$('form').submit(function(e){
+			if(errors.length === 0) {
+				return true;
+			} else {
+				e.preventDefault();
+			}
+		});
+	});
+</script>
+
+<form action="set_profile.php" id="profile_form" method="post">
+	<span class="errors"></span>
   Update your profile info:<br>
   First name: <input type="text" name="firstname" value="$firstname">
   <br>
