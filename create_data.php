@@ -119,6 +119,7 @@ $usernames[] = 'a'; $passwords[] = 'test';
 $usernames[] = 'b'; $passwords[] = 'test';
 $usernames[] = 'c'; $passwords[] = 'test';
 $usernames[] = 'd'; $passwords[] = 'test';
+$usernames[] = 'admin'; $passwords[] = 'secret';
 
 // loop through the arrays above and add rows to the table:
 for ($i=0; $i<count($usernames); $i++)
@@ -158,7 +159,7 @@ else
 ///////////////////////////////////////////
 
 // make our table:
-$sql = "CREATE TABLE likes (post_id SERIAL, username VARCHAR(16), PRIMARY KEY(post_id, username), FOREIGN KEY(username) REFERENCES members(username), FOREIGN KEY(post_id) REFERENCES feed(post_id))";
+$sql = "CREATE TABLE likes (post_id BIGINT UNSIGNED, username VARCHAR(16), PRIMARY KEY(post_id, username), FOREIGN KEY(username) REFERENCES members(username), FOREIGN KEY(post_id) REFERENCES feed(post_id))";
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))

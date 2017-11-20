@@ -29,16 +29,20 @@
     	if($n > 0) {
         $query = "INSERT INTO likes (post_id, username) VALUES ('$post_id','$username')";
   			$result = mysqli_query($connection, $query);
+
     	} else {
         echo "You've already liked this post.";
       }
 
     	// Close the connection, it's no longer required.
     	mysqli_close($connection);
+
+      // Redirect the user to the feed.
+      header('location:/global_feed.php');
     }
 
     // After an invalid or valid request, redirect the user to the feed.
-    header('location:/global_feed.php');
+    //header('location:/global_feed.php');
   } else {
     echo "You must be logged in to access this page.";
   }

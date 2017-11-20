@@ -38,15 +38,18 @@ echo <<<_END
 		<a href='libraries.php'>video sharing</a>
 	</div>
 	<div class="pull-right">
+_END;
+
+if($_SESSION['username'] == "admin") {
+	// add an extra menu option if this was the admin:
+	echo "  <a href='developer_tools.php'>developer tools</a>";
+}
+
+echo <<<_END
 		<a href='sign_out.php'>sign out ({$_SESSION['username']})</a>
 	</div>
 </nav>
 _END;
-	// add an extra menu option if this was the admin:
-	if ($_SESSION['username'] == "admin")
-	{
-		echo "  <a href='developer_tools.php'>developer tools</a>";
-	}
 }
 else
 {
