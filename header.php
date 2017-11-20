@@ -24,7 +24,7 @@ echo <<<_END
 <html>
 <head>
 	<title>2CWK50 - Joshua McEwen</title>
-	<link rel="stylesheet" href="/resources/css/style.css">
+	<link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body>
 <nav>
@@ -61,7 +61,7 @@ echo <<<_END
 <html>
 <head>
 	<title>2CWK50 - Joshua McEwen</title>
-	<link rel="stylesheet" href="/resources/css/style.css">
+	<link rel="stylesheet" href="resources/css/style.css">
 </head>
 <body>
 <nav>

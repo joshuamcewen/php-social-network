@@ -84,7 +84,7 @@ elseif (isset($_POST['username']))
 			$_SESSION['username'] = $username;
 
 			// Redirect to profile
-			header('location:/show_profile.php');
+			header('location:show_profile.php');
 		}
 		else
 		{

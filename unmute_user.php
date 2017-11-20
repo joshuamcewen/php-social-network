@@ -31,7 +31,7 @@
     	mysqli_close($connection);
     } else {
       // If an invalid request is made, redirect the user to the feed.
-      header('location:/global_feed.php');
+      header('location:global_feed.php');
     }
   } else {
     echo "You must be logged in to access this page.";

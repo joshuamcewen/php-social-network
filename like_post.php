@@ -38,7 +38,7 @@
     	mysqli_close($connection);
 
       // Redirect the user to the feed.
-      header('location:/global_feed.php');
+      header('location:global_feed.php');
     }
 
     // After an invalid or valid request, redirect the user to the feed.

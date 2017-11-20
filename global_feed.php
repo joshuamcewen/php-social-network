@@ -21,33 +21,27 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 		crossorigin="anonymous"></script>
 
 		<script type="text/javascript">
-			function refreshFeed() {
-				$.getJSON("return_feed.php", function(data) {
-					var posts = [];
-
-					$('ul#posts').html("");
-					$.each(data, function(index, post) {
+			setInterval(function(){
+				$.getJSON("return_feed.php", function(json) {
+							$('ul#posts').html("");
+							$.each(json, function(index, post) {
 _END;
 
-	// If the user is an admin, add the mute button on AJAX refresh.
-	if($_SESSION['username'] == "admin") {
+		// If the user is an admin, add the mute button on AJAX refresh.
+		if($_SESSION['username'] == "admin") {
+			echo <<<_END
+								$('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='/mute_user.php?username=" + post.username + "' class='mute'>Mute</a><a href='/like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
+_END;
+		} else {
+			echo <<<_END
+								$('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='/like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
+_END;
+		}
+
 		echo <<<_END
-			$('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='/mute_user.php?username=" + post.username + "' class='mute'>Mute</a><a href='/like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
-_END;
-	} else {
-		echo <<<_END
-			$('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='/like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
-_END;
-	}
-
-	echo <<<_END
-					});
+						});
 				});
-			}
-
-			$(document).ready(function(){
-				setInterval(refreshFeed, 3000);
-			});
+			}, 3000);
 		</script>
 	 <form class="feed" method="POST" action="">
 	 		<textarea name="message" placeholder="Have something to say?"></textarea>
@@ -161,8 +155,6 @@ _END;
 				</li>
 			";
 		}
-	} else {
-		echo "Nobody has posted to the feed yet.";
 	}
 	echo "</ul>";
 

@@ -33,10 +33,10 @@
       while($row = mysqli_fetch_assoc($result)) {
         array_push($posts, $row);
       }
-
-      // Print the JSON out for parsing by JavaScript.
-  		echo json_encode($posts);
   	}
+
+    // Print the JSON out for parsing by JavaScript.
+    echo json_encode($posts);
 
   	// Close the connection, it's no longer required.
   	mysqli_close($connection);
