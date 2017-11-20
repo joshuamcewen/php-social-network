@@ -2,7 +2,7 @@
 
 // Things to notice:
 // You need to add your recommendations for the video sharing component to this script
-// You should use client-side code (i.e., HTML5/JavaScript/jQuery) to help you organise and present your analysis 
+// You should use client-side code (i.e., HTML5/JavaScript/jQuery) to help you organise and present your analysis
 // For example, using tables, bullet point lists, images, hyperlinking to relevant materials, etc.
 
 // execute the header script:
@@ -15,6 +15,7 @@ if (!isset($_SESSION['loggedInSkeleton']))
 }
 else
 {
+	echo "<h2>Video Sharing</h2>";
 	echo "Your recommendations for the Video Sharing component go here... See the assignment specification for more details.<br>";
 }
 

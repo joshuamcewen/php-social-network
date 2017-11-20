@@ -31,13 +31,10 @@ $message = "";
 
 $errors = "";
 
-if (!isset($_SESSION['loggedInSkeleton']))
-{
+if (!isset($_SESSION['loggedInSkeleton'])) {
 	// user isn't logged in, display a message saying they must be:
 	echo "You must be logged in to view this page.<br>";
-}
-elseif (isset($_POST['firstname']))
-{
+} elseif (isset($_POST['firstname'])) {
 	// user just tried to update their profile
 
 	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
@@ -85,8 +82,7 @@ elseif (isset($_POST['firstname']))
 	}
 
 	// check that all the validation tests passed before going to the database:
-	if ($errors == "")
-	{
+	if ($errors == "") {
 		// read their username from the session:
 		$username = $_SESSION["username"];
 
@@ -102,35 +98,27 @@ elseif (isset($_POST['firstname']))
 		$n = mysqli_num_rows($result);
 
 		// if there was a match then UPDATE their profile data, otherwise INSERT it:
-		if ($n > 0)
-		{
+		if($n > 0){
 			// we need an UPDATE:
 			$query = "UPDATE profiles SET firstname='$firstname',lastname='$lastname',pets=$pets,email='$email',dob='$dob' WHERE username='$username'";
 			$result = mysqli_query($connection, $query);
-		}
-		else
-		{
+		} else {
 			// we need an INSERT:
 			$query = "INSERT INTO profiles (username,firstname,lastname,pets,email,dob) VALUES ('$username','$firstname','$lastname',$pets,'$email','$dob')";
 			$result = mysqli_query($connection, $query);
 		}
 
 		// no data returned, we just test for true(success)/false(failure):
-		if ($result)
-		{
+		if($result){
 			// show a successful update message:
 			$message = "Profile successfully updated<br>";
-		}
-		else
-		{
+		} else {
 			// show the set profile form:
 			$show_profile_form = true;
 			// show an unsuccessful update message:
 			$message = "Update failed<br>";
 		}
-	}
-	else
-	{
+	} else {
 		// validation failed, show the form again with guidance:
 		$show_profile_form = true;
 		// show an unsuccessful update message:
@@ -140,9 +128,7 @@ elseif (isset($_POST['firstname']))
 	// we're finished with the database, close the connection:
 	mysqli_close($connection);
 
-}
-else
-{
+} else {
 	// arrived at the page for the first time, show any data already in the table:
 
 	// read the username from the session:
@@ -247,22 +233,36 @@ echo <<<_END
 	});
 </script>
 
+<h2>Set Profile</h2>
+
 <form action="set_profile.php" id="profile_form" method="post">
 	<span class="errors">
 		$errors
 	</span>
   Update your profile info:<br>
-  First name: <input type="text" name="firstname" value="$firstname">
-  <br>
-  Last name: <input type="text" name="lastname" value="$lastname">
-  <br>
-  Number of pets: <input type="text" name="pets" value="$pets">
-  <br>
-  Email address: <input type="text" name="email" value="$email">
-  <br>
-  Date of birth: <input type="text" name="dob" value="$dob">
-  <br>
-  <input type="submit" value="Submit">
+  <div class="input-group">
+		<label>First name</label>
+		<input type="text" name="firstname" value="$firstname">
+	</div>
+  <div class="input-group">
+		<label>Last name</label>
+		<input type="text" name="lastname" value="$lastname">
+	</div>
+  <div class="input-group">
+		<label>Number of pets</label>
+		<input type="text" name="pets" value="$pets">
+	</div>
+  <div class="input-group">
+		<label>Email address</label>
+		<input type="text" name="email" value="$email">
+	</div>
+  <div class="input-group">
+		<label>Date of birth</label>
+		<input type="text" name="dob" value="$dob">
+	</div>
+	<div class="input-group">
+  	<input type="submit" value="Set Profile">
+	</div>
 </form>
 _END;
 }

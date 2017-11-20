@@ -42,6 +42,19 @@ mysqli_select_db($connection, $dbname);
 // Drop tables
 
 // if there's an old version of our table, then drop it:
+$sql = "DROP TABLE IF EXISTS likes";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "Dropped existing table: likes<br>";
+}
+else
+{
+	die("Error checking for existing table: " . mysqli_error($connection));
+}
+
+// if there's an old version of our table, then drop it:
 $sql = "DROP TABLE IF EXISTS feed";
 
 // no data returned, we just test for true(success)/false(failure):
@@ -85,7 +98,7 @@ else
 ///////////////////////////////////////////
 
 // make our table:
-$sql = "CREATE TABLE members (username VARCHAR(16), password VARCHAR(16), PRIMARY KEY(username))";
+$sql = "CREATE TABLE members (username VARCHAR(16), password VARCHAR(16), muted TINYINT(1) DEFAULT 0, PRIMARY KEY(username))";
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))
@@ -128,12 +141,29 @@ for ($i=0; $i<count($usernames); $i++)
 ///////////////////////////////////////////
 
 // make our table:
-$sql = "CREATE TABLE feed (post_id int AUTO_INCREMENT, username VARCHAR(16), message VARCHAR(140), posted_at TIMESTAMP, PRIMARY KEY(post_id), FOREIGN KEY(username) REFERENCES members(username))";
+$sql = "CREATE TABLE feed (post_id SERIAL, username VARCHAR(16), message VARCHAR(140), posted_at TIMESTAMP, PRIMARY KEY(post_id), FOREIGN KEY(username) REFERENCES members(username))";
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))
 {
 	echo "Table created successfully: feed<br>";
+}
+else
+{
+	die("Error creating table: " . mysqli_error($connection));
+}
+
+///////////////////////////////////////////
+//////////////  LIKES TABLE  //////////////
+///////////////////////////////////////////
+
+// make our table:
+$sql = "CREATE TABLE likes (post_id SERIAL, username VARCHAR(16), PRIMARY KEY(post_id, username), FOREIGN KEY(username) REFERENCES members(username), FOREIGN KEY(post_id) REFERENCES feed(post_id))";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "Table created successfully: likes<br>";
 }
 else
 {

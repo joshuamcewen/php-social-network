@@ -3,6 +3,7 @@
 // execute the header script:
 require_once "header.php";
 
+echo "<h2>About</h2>";
 echo "This is the skeleton code for 2CWK50. See the assignment specification for details of how you need to extend it.<br><br>";
 
 // finish of the HTML for this page:

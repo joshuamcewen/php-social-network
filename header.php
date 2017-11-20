@@ -5,7 +5,6 @@
 // It starts the session and displays a different set of menu links depending on whether the user is logged in or not...
 // ... And, if they are logged in, whether or not they are the admin
 // It also reads in the credentials for our database connection from credentials.php
-
 // database connection details:
 require_once "credentials.php";
 
@@ -23,37 +22,59 @@ if (isset($_SESSION['loggedInSkeleton']))
 echo <<<_END
 <!DOCTYPE html>
 <html>
+<head>
+	<title>2CWK50 - Joshua McEwen</title>
+	<link rel="stylesheet" href="/resources/css/style.css">
+</head>
 <body>
-<a href='about.php'>about</a> ||
-<a href='set_profile.php'>set profile</a> ||
-<a href='show_profile.php'>show profile</a> ||
-<a href='browse_profiles.php'>browse profiles</a> ||
-<a href='global_feed.php'>global feed</a> ||
-<a href='libraries.php'>video sharing</a> ||
-<a href='sign_out.php'>sign out ({$_SESSION['username']})</a>
+<nav>
+	<div class="pull-left">
+		<a href='about.php' class='brand'>2CWK50</a>
+		<a href='about.php'>about</a>
+		<a href='set_profile.php'>set profile</a>
+		<a href='show_profile.php'>show profile</a>
+		<a href='browse_profiles.php'>browse profiles</a>
+		<a href='global_feed.php'>global feed</a>
+		<a href='libraries.php'>video sharing</a>
+	</div>
+	<div class="pull-right">
+		<a href='sign_out.php'>sign out ({$_SESSION['username']})</a>
+	</div>
+</nav>
 _END;
 	// add an extra menu option if this was the admin:
 	if ($_SESSION['username'] == "admin")
 	{
-		echo " |||| <a href='developer_tools.php'>developer tools</a>";
+		echo "  <a href='developer_tools.php'>developer tools</a>";
 	}
 }
 else
 {
 	// THIS PERSON IS NOT LOGGED IN
 	// show the logged out menu options:
-	
+
 echo <<<_END
 <!DOCTYPE html>
 <html>
+<head>
+	<title>2CWK50 - Joshua McEwen</title>
+	<link rel="stylesheet" href="/resources/css/style.css">
+</head>
 <body>
-<a href='about.php'>about</a> ||
-<a href='sign_up.php'>sign up</a> ||
-<a href='sign_in.php'>sign in</a>
+<nav>
+	<div class="pull-left">
+		<a href='about.php' class='brand'>2CWK50</a>
+		<a href='about.php'>about</a>
+	</div>
+	<div class="pull-right">
+	<a href='sign_up.php'>sign up</a>
+	<a href='sign_in.php'>sign in</a>
+	</div>
+</nav>
 _END;
 }
 echo <<<_END
-<br>
+<div class="content">
 <h1>2CWK50: A Social Network</h1>
 _END;
 ?>

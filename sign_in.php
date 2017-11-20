@@ -83,8 +83,8 @@ elseif (isset($_POST['username']))
 			// and copy their username into the session data for use by our other scripts:
 			$_SESSION['username'] = $username;
 
-			// show a successful signin message:
-			$message = "Hi, $username, you have successfully logged in, please <a href='show_profile.php'>click here</a><br>";
+			// Redirect to profile
+			header('location:/show_profile.php');
 		}
 		else
 		{
@@ -120,13 +120,20 @@ if ($show_signin_form)
 // show the form that allows users to log in
 // Note we use an HTTP POST request to avoid their password appearing in the URL:
 echo <<<_END
+<h2>Sign In</h2>
 <form action="sign_in.php" method="post">
   Please enter your username and password:<br>
-  Username: <input type="text" name="username" maxlength="16" value="$username" required> $username_val
-  <br>
-  Password: <input type="password" name="password" maxlength="16" value="$password" required> $password_val
-  <br>
-  <input type="submit" value="Submit">
+  <div class="input-group">
+		<label>Username</label>
+		<input type="text" name="username" maxlength="16" value="$username" required> $username_val
+	</div>
+  <div class="input-group">
+		<label>Password</label>
+		<input type="password" name="password" maxlength="16" value="$password" required> $password_val
+	</div>
+	<div class="input-group">
+  	<input type="submit" value="Sign In">
+	</div>
 </form>
 _END;
 }

@@ -1,7 +1,7 @@
 <?php
 
 // Things to notice:
-// The main job of this script is to end the user's session 
+// The main job of this script is to end the user's session
 
 // execute the header script:
 require_once "header.php";
@@ -20,7 +20,7 @@ else
 	setcookie(session_name(), "", time() - 2592000, '/');
 	// then the session data on the server:
 	session_destroy();
-
+	echo "<h2>You've Signed Out</h2>";
 	echo "You have successfully logged out, please <a href='sign_in.php'>click here</a><br>";
 }
 

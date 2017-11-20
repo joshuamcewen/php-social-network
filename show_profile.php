@@ -13,6 +13,7 @@ if (!isset($_SESSION['loggedInSkeleton']))
 }
 else
 {
+	echo "<h2>Show Profile</h2>";
 	// connect directly to our database (notice 4th argument):
 	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
