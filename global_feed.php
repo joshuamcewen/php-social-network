@@ -14,37 +14,17 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	// If the user is logged in, echo ou the page contents
 	echo "<h2>Global Feed</h2>";
 
-	echo <<<_END
-	<script
-		src="https://code.jquery.com/jquery-3.2.1.min.js"
-		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-		crossorigin="anonymous"></script>
+echo <<<_END
+<script
+	src="https://code.jquery.com/jquery-3.2.1.min.js"
+	integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	crossorigin="anonymous"></script>
 
-		<script type="text/javascript">
-			setInterval(function(){
-				$.getJSON("return_feed.php", function(json) {
-							$('ul#posts').html("");
-							$.each(json, function(index, post) {
-_END;
+	<script src="resources/js/feed.js"></script>
 
-		// If the user is an admin, add the mute button on AJAX refresh.
-		if($_SESSION['username'] == "admin") {
-			echo <<<_END
-								$('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='/mute_user.php?username=" + post.username + "' class='mute'>Mute</a><a href='/like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
-_END;
-		} else {
-			echo <<<_END
-								$('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='/like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
-_END;
-		}
-
-		echo <<<_END
-						});
-				});
-			}, 3000);
-		</script>
 	 <form class="feed" method="POST" action="">
-	 		<textarea name="message" placeholder="Have something to say?"></textarea>
+	 		<textarea name="message" maxlength="140" placeholder="Have something to say?"></textarea>
+			<span id="characters">140 left</span>
 			<div class="input-group">
 				<input type="submit" value="Spread the word">
 			</div>
@@ -125,8 +105,8 @@ _END;
 	// Count the rows for reference
 	$n = mysqli_num_rows($result);
 
+	echo "<ul id='posts'>";
 	if($n > 0) {
-		echo "<ul id='posts'>";
 		// For each message retrieved, fetch as an associative array.
 		while($row = mysqli_fetch_assoc($result)){
 			// display the message.
@@ -146,17 +126,18 @@ _END;
 			";
 
 			if($_SESSION['username'] == "admin") {
-				echo "<a href='/mute_user.php?username={$row['username']}' class='mute'>Mute</a>";
+				echo "<a href='mute_user.php?username={$row['username']}' class='mute'>Mute</a>";
 			}
 
 			echo "
-						<a href='/like_post.php?id={$row['post_id']}'>Like</a>
+						<a href='like_post.php?id={$row['post_id']}'>Like</a>
 					</div>
 				</li>
 			";
 		}
 	}
 	echo "</ul>";
+	echo "<div id='options'></div>";
 
 	// Close the connection, it's no longer required.
 	mysqli_close($connection);

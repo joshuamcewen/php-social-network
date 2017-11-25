@@ -76,7 +76,7 @@ form label {
   font-size: 0.9em;
 }
 
-form input[type=text], form input[type=password] {
+form input[type=text], form input[type=password], form input[type=email], form input[type=date], form input[type=number] {
   flex-basis: 70%;
   font-family: inherit;
   padding: 0.3em;
@@ -119,6 +119,14 @@ form.feed textarea {
 form.feed textarea:focus {
   outline: none;
 }
+
+form.feed span#characters {
+  display: block;
+  text-align: right;
+  padding: 0.3em;
+  color: #666;
+}
+
 div.notification {
   max-width: 700px;
   margin: 0 auto 2em;
@@ -193,6 +201,22 @@ ul#posts li div.post-footer a.mute {
 ul#posts li div.post-footer a.mute:hover {
   background: #3F51B5;
   color: #fff;
+}
+
+div#options {
+  margin: 3em auto 1em;
+  text-align: center;
+  padding: 1em 0;
+  max-width: 700px;
+}
+
+div#options a {
+  padding: 1em;
+  border: 1px solid #aaa;
+}
+
+div#options a:hover {
+background: #eee;
 }
 
 span.icon {

@@ -1,5 +1,4 @@
 <?php
-  // Require header
   require_once "header.php";
 
   if (isset($_SESSION['loggedInSkeleton'])) {

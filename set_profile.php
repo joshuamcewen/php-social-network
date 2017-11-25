@@ -175,63 +175,17 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 
 }
 
+
 if ($show_profile_form)
 {
+	// Set date for max value in DOB.
+	$date = date('Y-m-d');
+
 echo <<<_END
 <script
   src="https://code.jquery.com/jquery-3.2.1.min.js"
   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
   crossorigin="anonymous"></script>
-
-<script type="text/javascript">
-
-	var errors = [];
-
-	function validateInput(value, pattern, message){
-		if(!value.match(pattern)) {
-			errors.push(message);
-		}
-	}
-
-	$(document).ready(function(){
-		$('form').keyup(function(){
-			// Clear errors to prevent duplication
-			errors = [];
-
-			// Clear errors from display
-			$('span.errors').html("");
-
-			// Validate the first name
-			validateInput($('input[name=firstname]').val(), /^[A-Za-z']{1,40}$/, "First name must be between 1 and 40 characters in length.");
-
-			// Validate the last name
-			validateInput($('input[name=lastname]').val(), /^[A-Za-z']{1,40}$/, "Last name must be between 1 and 50 characters in length.");
-
-			// Validate the number of pets
-			validateInput($('input[name=pets]').val(), /^[0-9]{1,4}$/, "Number of pets must be between 1 and 4 digits in length.");
-
-			// Validate the email address
-			validateInput($('input[name=email]').val(), /^([A-Za-z_.0-9]+@[A-Za-z_.0-9]+\.[A-Za-z.]{2,4}){1,50}$/, "Email address must between 1 and 50 character in length and be of a valid format.");
-
-			// Validate the date of birth
-			validateInput($('input[name=dob]').val(), /^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/, "Date of birth must be in the format YYYY-MM-DD.");
-
-			// For each error that has been presented, display at the top of form
-			$.each(errors, function(index, value){
-				$('span.errors').append(value + "<br>");
-			});
-		});
-
-		// When the form is submitted, prevent the submission if there are errors.
-		$('form').submit(function(e){
-			if(errors.length === 0) {
-				return true;
-			} else {
-				e.preventDefault();
-			}
-		});
-	});
-</script>
 
 <h2>Set Profile</h2>
 
@@ -242,23 +196,23 @@ echo <<<_END
   Update your profile info:<br>
   <div class="input-group">
 		<label>First name</label>
-		<input type="text" name="firstname" value="$firstname">
+		<input type="text" name="firstname" pattern="[A-Za-z']{1,40}" value="$firstname" required>
 	</div>
   <div class="input-group">
 		<label>Last name</label>
-		<input type="text" name="lastname" value="$lastname">
+		<input type="text" name="lastname" pattern="[A-Za-z']{1,50}" value="$lastname" required>
 	</div>
   <div class="input-group">
 		<label>Number of pets</label>
-		<input type="text" name="pets" value="$pets">
+		<input type="number" min="0" name="pets" value="$pets" required>
 	</div>
   <div class="input-group">
 		<label>Email address</label>
-		<input type="text" name="email" value="$email">
+		<input type="email" name="email" value="$email" required>
 	</div>
   <div class="input-group">
 		<label>Date of birth</label>
-		<input type="text" name="dob" value="$dob">
+		<input type="date" name="dob" value="$dob" max="$date" required>
 	</div>
 	<div class="input-group">
   	<input type="submit" value="Set Profile">

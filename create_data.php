@@ -98,7 +98,7 @@ else
 ///////////////////////////////////////////
 
 // make our table:
-$sql = "CREATE TABLE members (username VARCHAR(16), password VARCHAR(16), muted TINYINT(1) DEFAULT 0, PRIMARY KEY(username))";
+$sql = "CREATE TABLE members (username VARCHAR(16), password VARCHAR(255), muted TINYINT(1) DEFAULT 0, PRIMARY KEY(username))";
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))
@@ -111,15 +111,15 @@ else
 }
 
 // put some data in our table:
-$usernames[] = 'barryg'; $passwords[] = 'letmein';
-$usernames[] = 'mandyb'; $passwords[] = 'abc123';
-$usernames[] = 'mathman'; $passwords[] = 'secret95';
-$usernames[] = 'brianm'; $passwords[] = 'test';
-$usernames[] = 'a'; $passwords[] = 'test';
-$usernames[] = 'b'; $passwords[] = 'test';
-$usernames[] = 'c'; $passwords[] = 'test';
-$usernames[] = 'd'; $passwords[] = 'test';
-$usernames[] = 'admin'; $passwords[] = 'secret';
+$usernames[] = 'barryg'; $passwords[] = password_hash("letmein", PASSWORD_DEFAULT);
+$usernames[] = 'mandyb'; $passwords[] = password_hash("abc123", PASSWORD_DEFAULT);
+$usernames[] = 'mathman'; $passwords[] = password_hash("secret95", PASSWORD_DEFAULT);
+$usernames[] = 'brianm'; $passwords[] = password_hash("test", PASSWORD_DEFAULT);
+$usernames[] = 'a'; $passwords[] = password_hash("test", PASSWORD_DEFAULT);
+$usernames[] = 'b'; $passwords[] = password_hash("test", PASSWORD_DEFAULT);
+$usernames[] = 'c'; $passwords[] = password_hash("test", PASSWORD_DEFAULT);
+$usernames[] = 'd'; $passwords[] = password_hash("test", PASSWORD_DEFAULT);
+$usernames[] = 'admin'; $passwords[] = password_hash("secret", PASSWORD_DEFAULT);
 
 // loop through the arrays above and add rows to the table:
 for ($i=0; $i<count($usernames); $i++)

@@ -68,7 +68,7 @@ elseif (isset($_POST['username']))
 	if ($errors == "")
 	{
 		// Check for a row where username and password both exist, suggesting a correct login.
-		$query = "SELECT * FROM members WHERE username='$username' AND password='$password'";
+		$query = "SELECT * FROM members WHERE username='$username'";
 		// this query can return data ($result is an identifier):
 		$result = mysqli_query($connection, $query);
 
@@ -78,13 +78,23 @@ elseif (isset($_POST['username']))
 		// if there was a match then set the session variables and display a success message:
 		if ($n > 0)
 		{
-			// set a session variable to record that this user has successfully logged in:
-			$_SESSION['loggedInSkeleton'] = true;
-			// and copy their username into the session data for use by our other scripts:
-			$_SESSION['username'] = $username;
+			$row = mysqli_fetch_assoc($result);
 
-			// Redirect to profile
-			header('location:show_profile.php');
+			// If the password matches the hash (correct login)...
+			if(password_verify($password, $row['password'])) {
+				// set a session variable to record that this user has successfully logged in:
+				$_SESSION['loggedInSkeleton'] = true;
+				// and copy their username into the session data for use by our other scripts:
+				$_SESSION['username'] = $username;
+
+				// Redirect to profile
+				header('location:show_profile.php');
+			} else {
+				// no matching credentials found so redisplay the signin form with a failure message:
+				$show_signin_form = true;
+				// show an unsuccessful signin message:
+				$message = "Sign in failed, please try again<br>";
+			}
 		}
 		else
 		{
