@@ -23,6 +23,7 @@ $password = "";
 // strings to hold any validation error messages:
 $username_val = "";
 $password_val = "";
+$csrf_val = "";
 
 // should we show the signin form:
 $show_signin_form = false;
@@ -60,9 +61,10 @@ elseif (isset($_POST['username']))
 	// (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
 	$username_val = validateString($username, 1, 16);
 	$password_val = validateString($password, 1, 16);
+	$csrf_val = validateCSRF();
 
 	// concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
-	$errors = $username_val . $password_val;
+	$errors = $username_val . $password_val . $csrf_val;
 
 	// check that all the validation tests passed before going to the database:
 	if ($errors == "")
@@ -144,6 +146,8 @@ echo <<<_END
 	<div class="input-group">
   	<input type="submit" value="Sign In">
 	</div>
+	<input type="hidden" name="csrf_token" value="{$_SESSION['csrf_token']}">
+	$csrf_val
 </form>
 _END;
 }

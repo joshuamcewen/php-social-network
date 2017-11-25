@@ -14,6 +14,11 @@ require_once "helper.php";
 // start/restart the session:
 session_start();
 
+// Set a single use CSRF token to prevent forgery/multiple form submission.
+if(!isset($_SESSION['csrf_token'])) {
+	$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
 if (isset($_SESSION['loggedInSkeleton']))
 {
 	// THIS PERSON IS LOGGED IN

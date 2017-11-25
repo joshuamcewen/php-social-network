@@ -28,6 +28,7 @@ echo <<<_END
 			<div class="input-group">
 				<input type="submit" value="Spread the word">
 			</div>
+			<input type="hidden" name="csrf_token" value="{$_SESSION['csrf_token']}">
 	 </form>
 _END;
 
@@ -99,7 +100,7 @@ _END;
 	}
 
 	// Retrieve all posts from the feed table, newest first.
-	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes' FROM feed ORDER BY posted_at DESC";
+	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes', (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id AND likes.username = '{$_SESSION['username']}') AS 'liked' FROM feed ORDER BY posted_at DESC";
 	$result = mysqli_query($connection, $query);
 
 	// Count the rows for reference
@@ -129,9 +130,8 @@ _END;
 				echo "<a href='mute_user.php?username={$row['username']}' class='mute'>Mute</a>";
 			}
 
-			echo "
-						<a href='like_post.php?id={$row['post_id']}'>Like</a>
-					</div>
+			echo ($row['liked'] == 1 ? "<a href='unlike_post.php?id={$row['post_id']}' class='unlike'>Unlike</a>" : "<a href='like_post.php?id={$row['post_id']}'>Like</a>") .
+					"</div>
 				</li>
 			";
 		}

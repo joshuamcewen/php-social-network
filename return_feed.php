@@ -26,7 +26,7 @@
     }
 
   	// Retrieve all posts from the feed table, newest first.
-  	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes' FROM feed ORDER BY posted_at DESC LIMIT 0, $limit";
+  	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes', (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id AND likes.username = '{$_SESSION['username']}') AS 'liked' FROM feed ORDER BY posted_at DESC LIMIT 0, $limit";
   	$result = mysqli_query($connection, $query);
 
   	// Count the rows for reference

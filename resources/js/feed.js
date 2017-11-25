@@ -11,11 +11,18 @@ function retrievePosts(){
         // For each post in the posts key pair, append to list.
         $.each(response.posts, function(index, post) {
           // If the user is an admin, show administrative options.
-          if(response.admin == 1) {
-            $('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='mute_user.php?username=" + post.username + "' class='mute'>Mute</a><a href='like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
-          } else {
-            $('ul#posts').append("<li><div class='post-details'><span class='username'>" + post.username + "</span><span class='posted'>" + post.posted_at + "</span></div><div class='post-body'>" + post.message + "</div><div class='post-footer'><span class='likes'><span class='icon like'></span>" + post.likes +"</span><a href='like_post.php?id=" + post.post_id + "'>Like</a></div></li>");
-          }
+          $('ul#posts').append("<li>" +
+                               "<div class='post-details'>" +
+                               "<span class='username'>" + post.username + "</span>" +
+                               "<span class='posted'>" + post.posted_at + "</span>" +
+                               "</div><div class='post-body'>" + post.message + "</div>" +
+                               "<div class='post-footer'>" +
+                               "<span class='likes'><span class='icon like'></span>" + post.likes +"</span>" +
+                               (response.admin == 1 ? "<a href='mute_user.php?username=" + post.username + "' class='mute'>Mute</a>" : "") +
+                               (post.liked == 1 ? "<a href='unlike_post.php?id=" + post.post_id + "' class='unlike'>Unlike</a>" : "<a href='like_post.php?id=" + post.post_id + "'>Like</a>") +
+                               "</div>" +
+                               "</li>"
+                             );
         });
 
         // If the total number of posts is greater than the limit, show option to load more.

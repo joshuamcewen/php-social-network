@@ -139,13 +139,18 @@ ul#posts {
   margin: 0 auto;
   list-style-type: none;
   max-width: 700px;
+  background: #eee;
+  padding: 1em;
 }
 
 ul#posts li {
   display: flex;
   flex-direction: column;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
   margin: 0 0 1em;
+  background: #fff;
+  font-size: 0.95em;
+  border-bottom: 3px solid #ddd;
 }
 
 ul#posts div.post-details {
@@ -170,12 +175,12 @@ ul#posts li div.post-body {
 }
 
 ul#posts li div.post-footer {
-  padding: 1em;
-  border-top: 1px solid #eee;
+  padding: 0.7em 1em;
   margin: 1em 0 0;
   font-size: 0.85em;
   display: flex;
   justify-content: space-between;
+  border-top: 1px solid #eee;
   align-items: center;
 }
 
@@ -193,6 +198,16 @@ ul#posts li div.post-footer a:hover {
   color: #fff;
 }
 
+ul#posts li div.post-footer a.unlike {
+  border: 1px solid #FF5722;
+  color: #FF5722;
+}
+
+ul#posts li div.post-footer a.unlike:hover {
+  background: #FF5722;
+  color: #fff;
+}
+
 ul#posts li div.post-footer a.mute {
   border: 1px solid #3F51B5;
   color: #3F51B5;
@@ -204,19 +219,22 @@ ul#posts li div.post-footer a.mute:hover {
 }
 
 div#options {
-  margin: 3em auto 1em;
+  margin: 2em auto 1em;
   text-align: center;
   padding: 1em 0;
   max-width: 700px;
 }
 
 div#options a {
-  padding: 1em;
+  padding: 0.5em 1em;
   border: 1px solid #aaa;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
 }
 
 div#options a:hover {
 background: #eee;
+cursor: pointer;
 }
 
 span.icon {

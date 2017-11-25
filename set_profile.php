@@ -24,6 +24,7 @@ $lastname_val = "";
 $age_val = "";
 $email_val = "";
 $dob_val = "";
+$csrf_val = "";
 // should we show the set profile form?:
 $show_profile_form = false;
 // message to output to user:
@@ -80,6 +81,9 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	if(!preg_match('/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/', $dob)) {
 		$errors .= "Date of birth must be in the format YYYY-MM-DD.<br>";
 	}
+
+	// Validate CSRF token.
+	$errors.= validateCSRF();
 
 	// check that all the validation tests passed before going to the database:
 	if ($errors == "") {
@@ -217,6 +221,7 @@ echo <<<_END
 	<div class="input-group">
   	<input type="submit" value="Set Profile">
 	</div>
+	<input type="hidden" name="csrf_token" value="{$_SESSION['csrf_token']}">
 </form>
 _END;
 }
