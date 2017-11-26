@@ -195,6 +195,7 @@ ul#posts li div.post-footer a {
 
 ul#posts li div.post-footer a:hover {
   background: #9C27B0;
+  cursor: pointer;
   color: #fff;
 }
 

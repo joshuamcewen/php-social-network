@@ -21,7 +21,7 @@ $dob = "";
 // strings to hold any validation error messages:
 $firstname_val = "";
 $lastname_val = "";
-$age_val = "";
+$pets_val = "";
 $email_val = "";
 $dob_val = "";
 $csrf_val = "";
@@ -58,32 +58,28 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	// SERVER-SIDE VALIDATION CODE MISSING:
 
 	// Validate the first name
-	if(!preg_match('/^[A-Za-z\']{1,40}$/', $firstname)) {
-		$errors .= "First name must be between 1 and 40 characters in length.<br>";
-	}
+	$firstname_val = validatePattern($firstname, '/^[A-Za-z\']{1,40}$/', "First name must be between 1 and 40 characters in length.");
 
 	// Validate the last name
-	if(!preg_match('/^[A-Za-z\']{1,50}$/', $lastname)) {
-		$errors .= "Last name must be between 1 and 50 characters in length.<br>";
-	}
+	$lastname_val = validatePattern($lastname, '/^[A-Za-z\']{1,50}$/', "Last name must be between 1 and 50 characters in length.");
 
 	// Validate pets
-	if(!preg_match('/^[0-9]{1,4}$/', $pets)) {
-		$errors .= "Number of pets must be between 1 and 4 digits in length.<br>";
-	}
+	$pets_val = validatePattern($pets, '/^[0-9]{1,4}$/', "Number of pets must be between 1 and 4 digits in length.<br>");
 
 	// Validate email
-	if(!preg_match('/^([A-Za-z_.0-9]+@[A-Za-z_.0-9]+\.[A-Za-z.]{2,4}){1,50}$/', $email)) {
-		$errors .= "Email address must between 1 and 50 character in length and be of a valid format.<br>";
-	}
+	$email_val = validateEmail($email);
 
 	// Validate date of birth
-	if(!preg_match('/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/', $dob)) {
-		$errors .= "Date of birth must be in the format YYYY-MM-DD.<br>";
-	}
+	$dob_val = validatePattern($dob,
+									'/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/',
+									"Date of birth must be in the format YYYY-MM-DD."
+								 );
 
 	// Validate CSRF token.
-	$errors.= validateCSRF();
+	$csrf_val = validateCSRF();
+
+	// Concatenate error messages.
+	$errors = $firstname_val . $lastname_val . $pets_val . $email_val . $dob_val . $csrf_val;
 
 	// check that all the validation tests passed before going to the database:
 	if ($errors == "") {
@@ -194,34 +190,31 @@ echo <<<_END
 <h2>Set Profile</h2>
 
 <form action="set_profile.php" id="profile_form" method="post">
-	<span class="errors">
-		$errors
-	</span>
   Update your profile info:<br>
   <div class="input-group">
 		<label>First name</label>
-		<input type="text" name="firstname" pattern="[A-Za-z']{1,40}" value="$firstname" required>
+		<input type="text" name="firstname" pattern="[A-Za-z']{1,40}" value="$firstname" required> $firstname_val
 	</div>
   <div class="input-group">
 		<label>Last name</label>
-		<input type="text" name="lastname" pattern="[A-Za-z']{1,50}" value="$lastname" required>
+		<input type="text" name="lastname" pattern="[A-Za-z']{1,50}" value="$lastname" required> $lastname_val
 	</div>
   <div class="input-group">
 		<label>Number of pets</label>
-		<input type="number" min="0" name="pets" value="$pets" required>
+		<input type="number" min="0" name="pets" value="$pets" required> $pets_val
 	</div>
   <div class="input-group">
 		<label>Email address</label>
-		<input type="email" name="email" value="$email" required>
+		<input type="email" name="email" value="$email" required> $email_val
 	</div>
   <div class="input-group">
 		<label>Date of birth</label>
-		<input type="date" name="dob" value="$dob" max="$date" required>
+		<input type="date" name="dob" value="$dob" max="$date" required> $dob_val
 	</div>
 	<div class="input-group">
   	<input type="submit" value="Set Profile">
 	</div>
-	<input type="hidden" name="csrf_token" value="{$_SESSION['csrf_token']}">
+	<input type="hidden" name="csrf_token" value="{$_SESSION['csrf_token']}"> $csrf_val
 </form>
 _END;
 }

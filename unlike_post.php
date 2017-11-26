@@ -24,13 +24,7 @@
 
     	// Close the connection, it's no longer required.
     	mysqli_close($connection);
-
-      // Redirect the user to the feed.
-      header('location:global_feed.php');
     }
-
-    // After an invalid or valid request, redirect the user to the feed.
-    //header('location:/global_feed.php');
   } else {
     echo "You must be logged in to access this page.";
   }

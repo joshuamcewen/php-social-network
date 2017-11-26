@@ -19,7 +19,7 @@ function retrievePosts(){
                                "<div class='post-footer'>" +
                                "<span class='likes'><span class='icon like'></span>" + post.likes +"</span>" +
                                (response.admin == 1 ? "<a href='mute_user.php?username=" + post.username + "' class='mute'>Mute</a>" : "") +
-                               (post.liked == 1 ? "<a href='unlike_post.php?id=" + post.post_id + "' class='unlike'>Unlike</a>" : "<a href='like_post.php?id=" + post.post_id + "'>Like</a>") +
+                               (post.liked == 1 ? "<a data-action='unlike' data-post='" + post.post_id + "' class='unlike'>Unlike</a>" : "<a data-action='like' data-post='" + post.post_id + "'>Like</a>") +
                                "</div>" +
                                "</li>"
                              );
@@ -49,5 +49,25 @@ function retrievePosts(){
   // .on() used as event handlers don't handle appended elements.
   $(document).on('click', 'a[data-action="load"]', function(){
     limit += 5;
+    retrievePosts();
+  });
+
+  // When the unlike button is pressed, extract the post ID from the data attribute
+  // and execute the unlike_post script via jQuery.
+  $(document).on('click', 'a[data-action="unlike"]', function(){
+    var post_id = $(this).data('post');
+    $.get("unlike_post.php?id=" + post_id);
+
+    // Refresh the feed to reflect changes.
+    retrievePosts();
+  });
+
+  // When the like button is pressed, extract the post ID from the data attribute
+  // and execute the like_post script via jQuery.
+  $(document).on('click', 'a[data-action="like"]', function(){
+    var post_id = $(this).data('post');
+    $.get("like_post.php?id=" + post_id);
+
+    // Refresh the feed to reflect changes.
     retrievePosts();
   });

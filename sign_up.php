@@ -119,7 +119,7 @@ echo <<<_END
 	</div>
 	<div class="input-group">
   	<label>Password</label>
-		<input type="password" name="password" maxlength="16" value="$password" required> $password_val
+		<input type="password" name="password" maxlength="16" required> $password_val
 	</div>
 	<div class="input-group">
   	<input type="submit" value="Sign Up">

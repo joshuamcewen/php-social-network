@@ -23,7 +23,7 @@ echo <<<_END
 	<script src="resources/js/feed.js"></script>
 
 	 <form class="feed" method="POST" action="">
-	 		<textarea name="message" maxlength="140" placeholder="Have something to say?"></textarea>
+	 		<textarea name="message" maxlength="140" placeholder="Have something to say?" required></textarea>
 			<span id="characters">140 left</span>
 			<div class="input-group">
 				<input type="submit" value="Spread the word">
@@ -55,13 +55,26 @@ _END;
 			$username = sanitise($_SESSION['username'], $connection);
 			$message = sanitise($_POST['message'], $connection);
 
-			$query = "INSERT INTO feed(username, message) VALUES('$username', '$message')";
-			$result = mysqli_query($connection, $query);
+			// Blank error string by default.
+			$errors = "";
 
-			if($result) {
-				echo "<div class='notification'>Post was successful.</div>";
+			// Validate the feed message.
+			$errors.= validateString($message, 1, 140);
+
+			// Validate CSRF token.
+			$errors .= validateCSRF();
+
+			if($errors == "") {
+				$query = "INSERT INTO feed(username, message) VALUES('$username', '$message')";
+				$result = mysqli_query($connection, $query);
+
+				if($result) {
+					echo "<div class='notification'>Post was successful.</div>";
+				} else {
+					echo "<div class='notification'>Post was unsuccessful.</div>";
+				}
 			} else {
-				echo "<div class='notification'>Post was unsuccessful.</div>";
+				echo "<div class='notification'>Please enter a valid message.</div>";
 			}
 		} else {
 			echo "<div class='notification'>You can't post, you've been muted.</div>";
@@ -130,7 +143,7 @@ _END;
 				echo "<a href='mute_user.php?username={$row['username']}' class='mute'>Mute</a>";
 			}
 
-			echo ($row['liked'] == 1 ? "<a href='unlike_post.php?id={$row['post_id']}' class='unlike'>Unlike</a>" : "<a href='like_post.php?id={$row['post_id']}'>Like</a>") .
+			echo ($row['liked'] == 1 ? "<a data-action='unlike' data-post='{$row['post_id']}' class='unlike'>Unlike</a>" : "<a data-action='like' data-post='{$row['post_id']}'>Like</a>") .
 					"</div>
 				</li>
 			";

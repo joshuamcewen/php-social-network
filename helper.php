@@ -62,6 +62,23 @@ function validateCSRF() {
 	return "";
 }
 
+// A function to validate Regular Expressions against given data.
+// A custom error message is passed due to the differing nature of patterns.
+function validatePattern($field, $pattern, $error) {
+	if(!preg_match($pattern, $field)) {
+		return $error;
+	}
+	return "";
+}
+
+// A function to validate email addresses and check their length.
+function validateEmail($email) {
+	if(!(filter_var($email, FILTER_VALIDATE_EMAIL) && validateString($email, 1, 50))) {
+		return "Email address must between 1 and 50 character in length and be of a valid format.";
+	}
+	return "";
+}
+
 // all other validation functions should follow the same rule:
 // if the data is valid return an empty string, if the data is invalid return a help message
 // ...
