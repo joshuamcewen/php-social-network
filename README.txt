@@ -9,7 +9,7 @@ DOCUMENTATION:
 ...
 Testing the feed API
 - Functionality is demonstrated in /global_feed.php
-- Additionally, to retrieve the raw JSON, use /return_feed.php?limit=10
+- Additionally, to retrieve the raw JSON, use /api/recent.php?limit=10
 - Authentication is required when accessing the URI.
 
 Changelog

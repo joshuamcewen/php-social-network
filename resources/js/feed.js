@@ -4,7 +4,7 @@ var limit = 5;
 // Function to retrieve posts and append to the page.
 function retrievePosts(){
   // Retrieve contents of return_feed.php which returns posts as JSON. Send a limit as well.
-  $.getJSON("return_feed.php?limit=" + limit, function(response) {
+  $.getJSON("api/recent.php?limit=" + limit, function(response) {
 
         $('ul#posts').html("");
 
@@ -56,7 +56,7 @@ function retrievePosts(){
   // and execute the unlike_post script via jQuery.
   $(document).on('click', 'a[data-action="unlike"]', function(){
     var post_id = $(this).data('post');
-    $.get("unlike_post.php?id=" + post_id);
+    $.post("api/unlike.php", { post_id : post_id });
 
     // Refresh the feed to reflect changes.
     retrievePosts();
@@ -66,7 +66,7 @@ function retrievePosts(){
   // and execute the like_post script via jQuery.
   $(document).on('click', 'a[data-action="like"]', function(){
     var post_id = $(this).data('post');
-    $.get("like_post.php?id=" + post_id);
+    $.post("api/like.php", { post_id : post_id });
 
     // Refresh the feed to reflect changes.
     retrievePosts();
