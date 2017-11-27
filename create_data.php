@@ -98,7 +98,7 @@ else
 ///////////////////////////////////////////
 
 // make our table:
-$sql = "CREATE TABLE members (username VARCHAR(16), password VARCHAR(255), muted TINYINT(1) DEFAULT 0, PRIMARY KEY(username))";
+$sql = "CREATE TABLE members (username VARCHAR(16), password VARCHAR(255), muted TINYINT(1) DEFAULT 0, last_visit DATETIME, PRIMARY KEY(username))";
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))
@@ -152,6 +152,26 @@ if (mysqli_query($connection, $sql))
 else
 {
 	die("Error creating table: " . mysqli_error($connection));
+}
+
+$usernames = [];
+$usernames[] = "mandyb"; $messages[] = "This is my first post.";
+$usernames[] = "brianm"; $messages[] = "This is my first post as well!";
+
+// loop through the arrays above and add rows to the table:
+for ($i=0; $i<count($usernames); $i++)
+{
+	$sql = "INSERT INTO feed (username, message) VALUES ('$usernames[$i]', '$messages[$i]')";
+
+	// no data returned, we just test for true(success)/false(failure):
+	if (mysqli_query($connection, $sql))
+	{
+		echo "row inserted<br>";
+	}
+	else
+	{
+		die("Error inserting row: " . mysqli_error($connection));
+	}
 }
 
 ///////////////////////////////////////////

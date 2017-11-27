@@ -34,7 +34,7 @@
   			$result = mysqli_query($connection, $query);
     	}
 
-      // Send a 201 created header if inserted successfully, else send a 400 bad request header.s
+      // Send a 201 created header if inserted successfully or 400 bad request otherwise.
       if(mysqli_affected_rows($connection) == 1) {
         header("Content-Type: application/json", NULL, 201);
       } else {
@@ -43,6 +43,9 @@
 
       // Close the connection, it's no longer required.
       mysqli_close($connection);
+    } else {
+      // Send a 400 bad request if no post ID provided.
+      header("Content-Type: application/json", NULL, 400);
     }
   } else {
     // Send a 401 unauthorised header.

@@ -11,7 +11,7 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	// user isn't logged in, display a message saying they must be:
 	echo "You must be logged in to view this page.<br>";
 } else {
-	// If the user is logged in, echo ou the page contents
+	// If the user is logged in, echo out the page contents
 	echo "<h2>Global Feed</h2>";
 
 echo <<<_END
@@ -39,6 +39,10 @@ _END;
 	if (!$connection) {
 		die("Connection failed: " . $mysqli_connect_error);
 	}
+
+	// Update the last visit time, used for new posts notification
+	$query = "UPDATE members SET last_visit = NOW() WHERE username = '{$_SESSION['username']}'";
+	mysqli_query($connection, $query);
 
 	// If message post data exists, attempt to add a new message to the feed
 	if(isset($_POST['message'])) {
@@ -113,7 +117,7 @@ _END;
 	}
 
 	// Retrieve all posts from the feed table, newest first.
-	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes', (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id AND likes.username = '{$_SESSION['username']}') AS 'liked' FROM feed ORDER BY posted_at DESC";
+	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes', (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id AND likes.username = '{$_SESSION['username']}') AS 'liked' FROM feed ORDER BY posted_at DESC LIMIT 5";
 	$result = mysqli_query($connection, $query);
 
 	// Count the rows for reference

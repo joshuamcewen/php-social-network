@@ -21,6 +21,24 @@ if(!isset($_SESSION['csrf_token'])) {
 
 if (isset($_SESSION['loggedInSkeleton']))
 {
+
+	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
+	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
+	// if the connection fails, we need to know, so allow this exit:
+	if (!$connection) {
+		die("Connection failed: " . $mysqli_connect_error);
+	}
+
+	// Retrieve number of posts made since last login (or 0000-00-00 00:00:00 if never logged in).
+	$query = "SELECT COUNT(*) AS 'Total' FROM feed WHERE posted_at > IFNULL((SELECT last_visit FROM members WHERE username = '{$_SESSION['username']}'), '0000-00-00 00:00:00')";
+	$result = mysqli_query($connection, $query);
+
+	$unseen = mysqli_fetch_assoc($result)['Total'];
+
+	// If there's more than 'new' post, display a badge.
+	$notification = ($unseen > 0 ? "<span class='badge'>$unseen</span>" : "");
+
 	// THIS PERSON IS LOGGED IN
 	// show the logged in menu options:
 
@@ -39,7 +57,7 @@ echo <<<_END
 		<a href='set_profile.php'>set profile</a>
 		<a href='show_profile.php'>show profile</a>
 		<a href='browse_profiles.php'>browse profiles</a>
-		<a href='global_feed.php'>global feed</a>
+		<a href='global_feed.php'>global feed$notification</a>
 		<a href='libraries.php'>video sharing</a>
 	</div>
 	<div class="pull-right">

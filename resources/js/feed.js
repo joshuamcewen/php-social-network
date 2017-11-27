@@ -32,6 +32,9 @@ function retrievePosts(){
           $('div#options').html("No more posts");
         }
     });
+
+    // Update the last visited time to reflect live changes made to the page.
+    $.post("api/visit.php");
   };
 
   $(document).ready(function(){

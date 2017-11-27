@@ -83,4 +83,20 @@ function validateEmail($email) {
 // if the data is valid return an empty string, if the data is invalid return a help message
 // ...
 
+function getUnseenCount() {
+	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
+	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+
+	// if the connection fails, we need to know, so allow this exit:
+	if (!$connection) {
+		die("Connection failed: " . $mysqli_connect_error);
+	}
+
+	$query = "SELECT COUNT(*) AS 'Total' FROM feed WHERE posted_at > (SELECT last_visit FROM members WHERE username = '{$_SESSION['username']}')";
+	// this query can return data ($result is an identifier):
+	$result = mysqli_query($connection, $query);
+
+	return mysqli_fetch_assoc($result)['Total'];
+}
+
 ?>
