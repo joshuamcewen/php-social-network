@@ -16,14 +16,19 @@ nav {
 
 nav div.pull-left, nav div.pull-right {
   display: flex;
+  align-items: center;
 }
 
 nav a {
-  padding: 0.9em;
+  padding: 2em 1.5em;
   text-decoration: none;
   color: inherit;
-  border-right: 1px solid #ddd;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  font-weight: 700;
   text-align: center;
+  color: #333;
+  align-self: center;
 }
 
 nav a.brand {

@@ -73,7 +73,7 @@ function validatePattern($field, $pattern, $error) {
 
 // A function to validate email addresses and check their length.
 function validateEmail($email) {
-	if(!(filter_var($email, FILTER_VALIDATE_EMAIL) && validateString($email, 1, 50))) {
+	if(!(filter_var($email, FILTER_VALIDATE_EMAIL) && validateString($email, 1, 50) == "")) {
 		return "Email address must between 1 and 50 character in length and be of a valid format.";
 	}
 	return "";

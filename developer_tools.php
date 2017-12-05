@@ -20,45 +20,38 @@ else
 	if ($_SESSION['username'] == "admin")
 	{
 		echo <<<_END
+		<script
+			src="https://code.jquery.com/jquery-3.2.1.min.js"
+			integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			crossorigin="anonymous"></script>
 		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
-
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
-
-        // Create the data table.
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Topping');
-        data.addColumn('number', 'Slices');
-        data.addRows([
-          ['Mushrooms', 3],
-          ['Onions', 1],
-          ['Olives', 1],
-          ['Zucchini', 1],
-          ['Pepperoni', 2]
-        ]);
-
-        // Set chart options
-        var options = {'title':'How Much Pizza I Ate Last Night',
-                       'width':400,
-                       'height':300};
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.PieChart(document.getElementById('chart'));
-        chart.draw(data, options);
-      }
-    </script>
+    <script type="text/javascript" src="resources/js/developer.js"></script>
 
 		<h2>Developer Tools</h2>
-		<div id="chart"></div>
+
+		<div id="likes_dashboard">
+			<h3>Top 5 Users by Likes Received</h3>
+			<div id="likes_slider"></div>
+			<div id="likes_chart"></div>
+		</div>
+
+		<div id="pets_dashboard">
+			<h3>Pets Demographic</h3>
+			<div id="pets_slider"></div>
+			<div id="pets_chart"></div>
+		</div>
+
+		<div id="posts_dashboard">
+			<h3>Top 5 Users by Posts Created</h3>
+			<div id="posts_slider"></div>
+			<div id="posts_chart"></div>
+		</div>
+
+		<div id="days_dashboard">
+			<h3>Posts by Day</h3>
+			<div id="days_slider"></div>
+			<div id="days_chart"></div>
+		</div>
 _END;
 	}
 	else
