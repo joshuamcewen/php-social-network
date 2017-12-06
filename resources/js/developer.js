@@ -88,7 +88,7 @@ function drawLikesDashboard() {
 
       // Clear the display message in the notification form.
       $('#users').html('Notification will be sent to ');
-
+ 
       // For each data value, get the username property.
       for(var i = 0; i < rows; i++) {
         var username = table.getValue(i, 0);

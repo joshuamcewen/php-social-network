@@ -24,7 +24,7 @@ else
 	}
 
 	// Retrieve all existing user profiles
-	$query = "SELECT *
+	$query = "SELECT username, firstname, lastname
 						FROM profiles
 						ORDER BY username";
 

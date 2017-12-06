@@ -66,7 +66,6 @@ function validateCSRF() {
 
 // A function to generate a new CSRF token.
 function generateCSRF() {
-	echo "dog.";
 	$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 

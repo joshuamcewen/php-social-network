@@ -60,7 +60,7 @@ elseif (isset($_POST['username']))
 	// now validate the data (both strings must be between 1 and 16 characters long):
 	// (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
 	$username_val = validateString($username, 1, 16);
-	$password_val = validateString($password, 1, 16);
+	$password_val = validateString($password, 1, 32);
 	$csrf_val = validateCSRF();
 
 	// concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
@@ -73,7 +73,7 @@ elseif (isset($_POST['username']))
 		$query = "SELECT *
 							FROM members
 							WHERE username='$username'";
-							
+
 		// this query can return data ($result is an identifier):
 		$result = mysqli_query($connection, $query);
 
@@ -144,7 +144,7 @@ echo <<<_END
 	</div>
   <div class="input-group">
 		<label>Password</label>
-		<input type="password" name="password" maxlength="16" value="$password" required> $password_val
+		<input type="password" name="password" maxlength="32" value="$password" required> $password_val
 	</div>
 	<div class="input-group">
   	<input type="submit" value="Sign In">
