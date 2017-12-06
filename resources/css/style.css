@@ -117,12 +117,12 @@ form input[type=submit]:hover {
   background: #C2185B;
 }
 
-form.feed {
+form.feed, form.notification {
   max-width: 700px;
   margin: 0 auto 2em;
 }
 
-form.feed textarea {
+form.feed textarea, form.notification textarea {
   font-family: inherit;
   padding: 1em;
   font-size: 1.3em;
@@ -132,15 +132,19 @@ form.feed textarea {
   margin: 0 0 0.2em;
 }
 
-form.feed textarea:focus {
+form.feed textarea:focus, form.notification textarea:focus {
   outline: none;
 }
 
-form.feed span#characters {
+form.feed span#characters, form.notification span#characters {
   display: block;
   text-align: right;
   padding: 0.3em;
   color: #666;
+}
+
+form.notification div#users {
+  padding: 1em 0;
 }
 
 div.notification {
@@ -235,6 +239,39 @@ ul#posts li div.post-footer a.mute:hover {
   color: #fff;
 }
 
+ul#notifications {
+  max-width: 700px;
+  margin: 0 auto 2em;
+  padding: 0;
+  list-style-type: none;
+}
+
+ul#notifications li {
+  background: #F44336;
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+  align-items: center;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  margin: 0 0 0.5em;
+  padding: 1em 1.5em;
+}
+
+ul#notifications li a {
+  background: #F44336;
+  border: 1px solid #fff;
+  padding: 0.5em 1em;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+ul#notifications li a:hover {
+  background: #D32F2F;
+}
+
 div#options {
   margin: 2em auto 1em;
   text-align: center;
@@ -278,6 +315,18 @@ div.admin-tools ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
+}
+
+div.dashboard {
+  text-align: center;
+  max-width: calc(700px - 2em);
+  margin: 0 auto 1em;
+  padding: 2em;
+  border: 1px solid #333;
+}
+
+div.dashboard h3 {
+  text-align: left;
 }
 
 footer {

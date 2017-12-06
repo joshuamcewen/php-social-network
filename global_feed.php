@@ -21,6 +21,7 @@ echo <<<_END
 	crossorigin="anonymous"></script>
 
 	<script src="resources/js/feed.js"></script>
+	<script src="resources/js/notifications.js"></script>
 
 	 <form class="feed" method="POST" action="">
 	 		<textarea name="message" maxlength="140" placeholder="Have something to say?" required></textarea>
@@ -116,8 +117,38 @@ _END;
 		";
 	}
 
+	// Retrieve all notifications from using the notify_users pivot table, newest first.
+	$query = "SELECT notification_id, message
+						FROM notify_users
+						JOIN notifications n USING(notification_id)
+						WHERE username = '{$_SESSION['username']}' AND seen = 0
+						ORDER BY n.notification_id DESC
+						LIMIT 5";
+
+	$result = mysqli_query($connection, $query);
+
+	// Count the rows for reference
+	$n = mysqli_num_rows($result);
+
+	echo "<ul id='notifications'>";
+	if($n > 0) {
+		while($row = mysqli_fetch_assoc($result)){
+			echo "
+				<li>
+					{$row['message']}
+					<a data-action='acknowledge' data-notification ='{$row['notification_id']}'>Acknowledge</a>
+				</li>
+			";
+		}
+	}
+	echo "</ul>";
+
 	// Retrieve all posts from the feed table, newest first.
-	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes', (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id AND likes.username = '{$_SESSION['username']}') AS 'liked' FROM feed ORDER BY posted_at DESC LIMIT 5";
+	$query = "SELECT post_id, username, message, posted_at, (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id) AS 'likes', (SELECT COUNT(*) FROM likes WHERE likes.post_id = feed.post_id AND likes.username = '{$_SESSION['username']}') AS 'liked'
+						FROM feed
+						ORDER BY posted_at DESC
+						LIMIT 5";
+
 	$result = mysqli_query($connection, $query);
 
 	// Count the rows for reference

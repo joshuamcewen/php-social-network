@@ -11,6 +11,9 @@ function drawDashboards() {
   drawDaysDashboard();
 }
 
+// Track users selected for marketing messages.
+var users = [];
+
 // Create a dashboard for the likes controls and chart.
 function drawLikesDashboard() {
   $.getJSON('api/developer/likes.php', function(response) {
@@ -39,8 +42,60 @@ function drawLikesDashboard() {
 
     dashboard.bind(slider, chart);
     dashboard.draw(data);
+
+    google.visualization.events.addListener(slider, 'ready', filterHandler);
+
+    // Add a listene to the slider. When changed, call the filterHandler function.
+    google.visualization.events.addListener(slider, 'statechange', filterHandler);
+
+    // An event handler for change of slider state.
+    function filterHandler() {
+      var table = chart.getDataTable();
+      var rows = table.getNumberOfRows();
+
+      // Clear the users array
+      users = [];
+
+      // Clear the display message in the notification form.
+      $('#users').html('Notification will be sent to ');
+
+      // For each data value, get the username property.
+      for(var i = 0; i < rows; i++) {
+        var username = table.getValue(i, 0);
+
+        // Push the username to the users array.
+        users.push(username);
+
+        // Append the username to the display panel.
+        $('#users').append("<b>" + username + "</b>");
+        $('#users').append((i == rows - 1 ? '' : ', '));
+      }
+    }
   });
 }
+
+$('document').ready(function(){
+  $('form').submit(function(e) {
+    e.preventDefault();
+    var message = $('textarea#message').val();
+
+    $.ajax({
+      type: 'POST',
+      url: "api/developer/notifications/create.php",
+      data: {
+              message : message,
+              users: users
+            },
+      complete: function(jqXHR, textStatus) {
+        if(jqXHR.status == 201) {
+          $('div#errors').html("Your post was successful.");
+        } else {
+          $('div#errors').html("We couldn't post your notification at this time.");
+        }
+      }
+    });
+  });
+});
 
 // Create a dashboard for the pets controls and chart.
 function drawPetsDashboard() {
@@ -58,7 +113,7 @@ function drawPetsDashboard() {
 
 
     var chart = new google.visualization.ChartWrapper({
-      'chartType': 'BarChart',
+      'chartType': 'ColumnChart',
       'containerId': 'pets_chart',
       'options': {
         'width': 500,
@@ -124,7 +179,8 @@ function drawDaysDashboard() {
       'containerId': 'days_chart',
       'options': {
         'width': 500,
-        'height': 240
+        'height': 240,
+        'pieHole': 0.4
       }
     });
 
@@ -134,6 +190,3 @@ function drawDaysDashboard() {
     dashboard.draw(data);
   });
 }
-
-// Every 3 seconds, poll the APIs and redraw the dashboards.
-setInterval(drawDashboards, 5000);

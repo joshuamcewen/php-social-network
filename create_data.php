@@ -42,6 +42,32 @@ mysqli_select_db($connection, $dbname);
 // Drop tables
 
 // if there's an old version of our table, then drop it:
+$sql = "DROP TABLE IF EXISTS notify_users";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "Dropped existing table: notifications<br>";
+}
+else
+{
+	die("Error checking for existing table: " . mysqli_error($connection));
+}
+
+// if there's an old version of our table, then drop it:
+$sql = "DROP TABLE IF EXISTS notifications";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "Dropped existing table: notifications<br>";
+}
+else
+{
+	die("Error checking for existing table: " . mysqli_error($connection));
+}
+
+// if there's an old version of our table, then drop it:
 $sql = "DROP TABLE IF EXISTS likes";
 
 // no data returned, we just test for true(success)/false(failure):
@@ -227,6 +253,40 @@ for ($i=0; $i<count($usernames); $i++)
 	{
 		die("Error inserting row: " . mysqli_error($connection));
 	}
+}
+
+////////////////////////////////////////////
+//////////// NOTIFICATION TABLE ////////////
+////////////////////////////////////////////
+
+// make our table:
+$sql = "CREATE TABLE notifications (notification_id SERIAL, message varchar(255))";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "Table created successfully: notifications<br>";
+}
+else
+{
+	die("Error creating table: " . mysqli_error($connection));
+}
+
+////////////////////////////////////////////
+//////////// NOTIFY_USERS TABLE ////////////
+////////////////////////////////////////////
+
+// make our table:
+$sql = "CREATE TABLE notify_users (notification_id BIGINT UNSIGNED, username varchar(16), seen tinyint(1) DEFAULT '0', PRIMARY KEY(username, notification_id), FOREIGN KEY(username) REFERENCES members(username), FOREIGN KEY(notification_id) REFERENCES notifications(notification_id))";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "Table created successfully: notify_users<br>";
+}
+else
+{
+	die("Error creating table: " . mysqli_error($connection));
 }
 
 // we're finished, close the connection:

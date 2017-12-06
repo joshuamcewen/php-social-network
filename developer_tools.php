@@ -29,25 +29,35 @@ else
 
 		<h2>Developer Tools</h2>
 
-		<div id="likes_dashboard">
+		<div class="dashboard" id="likes_dashboard">
 			<h3>Top 5 Users by Likes Received</h3>
 			<div id="likes_slider"></div>
 			<div id="likes_chart"></div>
+
+			<h3>Notify Users</h3>
+			<form id="form_notify" class="notification">
+				<div id="users"></div>
+				<textarea id="message" placeholder="Enter a message"></textarea>
+				<div class="input-group">
+					<input type="submit" value="Notify Users">
+				</div>
+				<div id="errors"></div>
+			</form>
 		</div>
 
-		<div id="pets_dashboard">
+		<div class="dashboard" id="pets_dashboard">
 			<h3>Pets Demographic</h3>
 			<div id="pets_slider"></div>
 			<div id="pets_chart"></div>
 		</div>
 
-		<div id="posts_dashboard">
+		<div class="dashboard" id="posts_dashboard">
 			<h3>Top 5 Users by Posts Created</h3>
 			<div id="posts_slider"></div>
 			<div id="posts_chart"></div>
 		</div>
 
-		<div id="days_dashboard">
+		<div class="dashboard" id="days_dashboard">
 			<h3>Posts by Day</h3>
 			<div id="days_slider"></div>
 			<div id="days_chart"></div>

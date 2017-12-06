@@ -70,7 +70,9 @@ elseif (isset($_POST['username']))
 	if ($errors == "")
 	{
 		// Check for a row where username and password both exist, suggesting a correct login.
-		$query = "SELECT * FROM members WHERE username='$username'";
+		$query = "SELECT *
+							FROM members
+							WHERE username='$username'";
 		// this query can return data ($result is an identifier):
 		$result = mysqli_query($connection, $query);
 
