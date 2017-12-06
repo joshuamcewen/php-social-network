@@ -16,7 +16,7 @@ session_start();
 
 // Set a single use CSRF token to prevent forgery/multiple form submission.
 if(!isset($_SESSION['csrf_token'])) {
-	$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+	generateCSRF();
 }
 
 if (isset($_SESSION['loggedInSkeleton']))
@@ -34,7 +34,7 @@ if (isset($_SESSION['loggedInSkeleton']))
 	$query = "SELECT COUNT(*) AS 'Total'
 						FROM feed
 						WHERE posted_at > IFNULL((SELECT last_visit FROM members WHERE username = '{$_SESSION['username']}'), '0000-00-00 00:00:00')";
-						
+
 	$result = mysqli_query($connection, $query);
 
 	$unseen = mysqli_fetch_assoc($result)['Total'];

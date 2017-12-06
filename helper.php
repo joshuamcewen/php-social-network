@@ -57,9 +57,17 @@ function validateInt($field, $min, $max)
 // A function to validate a CSRF token and return a boolean.
 function validateCSRF() {
 	if(!(isset($_SESSION['csrf_token']) && isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']))) {
+		generateCSRF();
 		return "CSRF token is invalid.";
 	}
+	generateCSRF();
 	return "";
+}
+
+// A function to generate a new CSRF token.
+function generateCSRF() {
+	echo "dog.";
+	$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
 // A function to validate Regular Expressions against given data.
