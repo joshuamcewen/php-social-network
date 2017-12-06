@@ -22,7 +22,11 @@
       $username = $_SESSION['username'];
 
       // Determine whether or not the user has already liked this post.
-    	$query = "SELECT COUNT(*) FROM likes WHERE username = '$username' AND post_id = '$post_id'";
+    	$query = "SELECT COUNT(*)
+                FROM likes
+                WHERE username = '$username'
+                AND post_id = '$post_id'";
+
     	$result = mysqli_query($connection, $query);
 
     	// Count the rows for reference
@@ -30,7 +34,9 @@
 
       // If no rows exist, insert a new like else, display an error message.
     	if($n > 0) {
-        $query = "INSERT INTO likes (post_id, username) VALUES ('$post_id','$username')";
+        $query = "INSERT INTO likes (post_id, username)
+                  VALUES ('$post_id','$username')";
+                  
   			$result = mysqli_query($connection, $query);
     	}
 

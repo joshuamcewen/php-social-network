@@ -13,7 +13,10 @@
   	}
 
   	// Update the last visit time, used for new posts notification
-  	$query = "UPDATE members SET last_visit = NOW() WHERE username = '{$_SESSION['username']}'";
+  	$query = "UPDATE members
+              SET last_visit = NOW()
+              WHERE username = '{$_SESSION['username']}'";
+              
   	mysqli_query($connection, $query);
 
     // If the query succeeds, return a 201 created header else 400 bad request.

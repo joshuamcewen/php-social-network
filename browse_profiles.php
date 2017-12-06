@@ -24,7 +24,9 @@ else
 	}
 
 	// Retrieve all existing user profiles
-	$query = "SELECT * FROM profiles ORDER BY username";
+	$query = "SELECT *
+						FROM profiles
+						ORDER BY username";
 
 	// Execute the query and return the results.
 	$result = mysqli_query($connection, $query);

@@ -90,7 +90,10 @@ _END;
 	if ($_SESSION['username'] == "admin")
 	{
 		// Retrieve all muted users
-		$query = "SELECT username FROM members WHERE muted = 1";
+		$query = "SELECT username
+							FROM members
+							WHERE muted = 1";
+							
 		$result = mysqli_query($connection, $query);
 
 		$n = mysqli_num_rows($result);

@@ -21,14 +21,23 @@
       // Sanitise the message contents.
     	$message = sanitise($_POST['message'], $connection);
 
-      $query = "INSERT INTO notifications (message) VALUES ('$message')";
-      $result = mysqli_query($connection, $query);
+      // Query to insert the notification into the notifications table.
+      $query = "INSERT INTO notifications (message)
+                VALUES ('$message')";
 
+      // Retrieve the result, store as mysqli_result object.
+      mysqli_query($connection, $query);
+
+      // Retrieve the ID for this recently inserted notification.
       $notification_id = mysqli_insert_id($connection);
 
+      // For each user that was passed in the users array, create a notify_users entry.
       foreach($_POST['users'] as $user) {
-        $query = "INSERT INTO notify_users (username, notification_id) VALUES ('$user','$notification_id')";
-        $result = mysqli_query($connection, $query);
+        $query = "INSERT INTO notify_users (username, notification_id)
+                  VALUES ('$user','$notification_id')";
+
+
+         mysqli_query($connection, $query);
       }
 
       // Send a 201 created header if inserted successfully or 400 bad request otherwise.

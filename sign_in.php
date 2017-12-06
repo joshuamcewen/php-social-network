@@ -73,6 +73,7 @@ elseif (isset($_POST['username']))
 		$query = "SELECT *
 							FROM members
 							WHERE username='$username'";
+							
 		// this query can return data ($result is an identifier):
 		$result = mysqli_query($connection, $query);
 

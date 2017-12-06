@@ -22,8 +22,12 @@
       $username = $_SESSION['username'];
 
       // Update the 'seen' value in the notify_users table to represent acknowledgement.
-    	$query = "UPDATE notify_users SET seen = 1 WHERE username = '$username' AND notification_id = '$notification_id'";
-    	$result = mysqli_query($connection, $query);
+    	$query = "UPDATE notify_users
+                SET seen = 1
+                WHERE username = '$username'
+                AND notification_id = '$notification_id'";
+
+    	mysqli_query($connection, $query);
 
       // Send a 201 created header if inserted successfully or 400 bad request otherwise.
       if(mysqli_affected_rows($connection) == 1) {

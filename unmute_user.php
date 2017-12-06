@@ -18,7 +18,10 @@
     	$username = sanitise($_GET['username'], $connection);
 
     	// Update the members table, altering the value of the muted column.
-    	$query = "UPDATE members SET muted = 0 WHERE username = '$username'";
+    	$query = "UPDATE members
+                SET muted = 0
+                WHERE username = '$username'";
+                
     	$result = mysqli_query($connection, $query);
 
       if($result) {

@@ -31,7 +31,10 @@ if (isset($_SESSION['loggedInSkeleton']))
 	}
 
 	// Retrieve number of posts made since last login (or 0000-00-00 00:00:00 if never logged in).
-	$query = "SELECT COUNT(*) AS 'Total' FROM feed WHERE posted_at > IFNULL((SELECT last_visit FROM members WHERE username = '{$_SESSION['username']}'), '0000-00-00 00:00:00')";
+	$query = "SELECT COUNT(*) AS 'Total'
+						FROM feed
+						WHERE posted_at > IFNULL((SELECT last_visit FROM members WHERE username = '{$_SESSION['username']}'), '0000-00-00 00:00:00')";
+						
 	$result = mysqli_query($connection, $query);
 
 	$unseen = mysqli_fetch_assoc($result)['Total'];

@@ -19,8 +19,7 @@
             JOIN feed f USING(username)
             JOIN likes l USING(post_id)
             GROUP BY m.username
-            ORDER BY likes DESC
-            LIMIT 5";
+            ORDER BY likes DESC";
 
 	$result = mysqli_query($connection, $query);
 

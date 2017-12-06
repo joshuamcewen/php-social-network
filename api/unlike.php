@@ -22,7 +22,10 @@
       $username = $_SESSION['username'];
 
     	// Delete any rows where the username and post ID are present.
-    	$query = "DELETE FROM likes WHERE username = '$username' AND post_id = '$post_id'";
+    	$query = "DELETE FROM likes
+                WHERE username = '$username'
+                AND post_id = '$post_id'";
+
     	$result = mysqli_query($connection, $query);
 
       // Send a 201 created header if inserted successfully or 400 bad request otherwise.

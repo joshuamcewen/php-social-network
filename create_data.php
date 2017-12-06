@@ -47,7 +47,7 @@ $sql = "DROP TABLE IF EXISTS notify_users";
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))
 {
-	echo "Dropped existing table: notifications<br>";
+	echo "Dropped existing table: notify_users<br>";
 }
 else
 {
@@ -183,6 +183,8 @@ else
 $usernames = [];
 $usernames[] = "mandyb"; $messages[] = "This is my first post.";
 $usernames[] = "brianm"; $messages[] = "This is my first post as well!";
+$usernames[] = "admin"; $messages[] = "Don\'t do bad things.";
+$usernames[] = "admin"; $messages[] = "I\'m an admin.";
 
 // loop through the arrays above and add rows to the table:
 for ($i=0; $i<count($usernames); $i++)
@@ -215,6 +217,31 @@ if (mysqli_query($connection, $sql))
 else
 {
 	die("Error creating table: " . mysqli_error($connection));
+}
+
+$usernames = [];
+$usernames[] = "mandyb"; $posts[] = 1;
+$usernames[] = "mandyb"; $posts[] = 2;
+$usernames[] = "brianm"; $posts[] = 1;
+$usernames[] = "brianm"; $posts[] = 3;
+$usernames[] = "admin"; $posts[] = 1;
+$usernames[] = "admin"; $posts[] = 3;
+$usernames[] = "admin"; $posts[] = 4;
+
+// loop through the arrays above and add rows to the table:
+for ($i=0; $i<count($usernames); $i++)
+{
+	$sql = "INSERT INTO likes (username, post_id) VALUES ('$usernames[$i]', '$posts[$i]')";
+
+	// no data returned, we just test for true(success)/false(failure):
+	if (mysqli_query($connection, $sql))
+	{
+		echo "row inserted<br>";
+	}
+	else
+	{
+		die("Error inserting row: " . mysqli_error($connection));
+	}
 }
 
 ////////////////////////////////////////////
@@ -272,6 +299,18 @@ else
 	die("Error creating table: " . mysqli_error($connection));
 }
 
+$sql = "INSERT INTO notifications (message) VALUES ('This is a notification, visible to all. Acknowledge me and I\'ll be gone forever.')";
+
+// no data returned, we just test for true(success)/false(failure):
+if (mysqli_query($connection, $sql))
+{
+	echo "row inserted<br>";
+}
+else
+{
+	die("Error inserting row: " . mysqli_error($connection));
+}
+
 ////////////////////////////////////////////
 //////////// NOTIFY_USERS TABLE ////////////
 ////////////////////////////////////////////
@@ -287,6 +326,33 @@ if (mysqli_query($connection, $sql))
 else
 {
 	die("Error creating table: " . mysqli_error($connection));
+}
+
+$usernames = [];
+$usernames[] = "a";
+$usernames[] = "admin";
+$usernames[] = "b";
+$usernames[] = "brianm";
+$usernames[] = "barryg";
+$usernames[] = "c";
+$usernames[] = "d";
+$usernames[] = "mandyb";
+$usernames[] = "mathman";
+
+// loop through the arrays above and add rows to the table:
+for ($i=0; $i<count($usernames); $i++)
+{
+	$sql = "INSERT INTO notify_users (username, notification_id) VALUES ('$usernames[$i]', 1)";
+
+	// no data returned, we just test for true(success)/false(failure):
+	if (mysqli_query($connection, $sql))
+	{
+		echo "row inserted<br>";
+	}
+	else
+	{
+		die("Error inserting row: " . mysqli_error($connection));
+	}
 }
 
 // we're finished, close the connection:

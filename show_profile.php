@@ -33,7 +33,9 @@ else
 	}
 
 	// check for a row in our profiles table with a matching username:
-	$query = "SELECT * FROM profiles WHERE username='$username'";
+	$query = "SELECT *
+						FROM profiles
+						WHERE username='$username'";
 
 	// this query can return data ($result is an identifier):
 	$result = mysqli_query($connection, $query);

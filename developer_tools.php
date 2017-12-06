@@ -30,16 +30,17 @@ else
 		<h2>Developer Tools</h2>
 
 		<div class="dashboard" id="likes_dashboard">
-			<h3>Top 5 Users by Likes Received</h3>
+			<h3>Users by Likes Received</h3>
 			<div id="likes_slider"></div>
 			<div id="likes_chart"></div>
 
-			<h3>Notify Users</h3>
+			<h4>Notify Users</h4>
 			<form id="form_notify" class="notification">
 				<div id="users"></div>
 				<textarea id="message" placeholder="Enter a message"></textarea>
+				<span id="characters">255 left</span>
 				<div class="input-group">
-					<input type="submit" value="Notify Users">
+					<input type="submit" value="Notify users">
 				</div>
 				<div id="errors"></div>
 			</form>

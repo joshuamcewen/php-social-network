@@ -89,7 +89,9 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 		// now write the new data to our database table...
 
 		// check to see if this user already had a favourite:
-		$query = "SELECT * FROM profiles WHERE username='$username'";
+		$query = "SELECT *
+							FROM profiles
+							WHERE username='$username'";
 
 		// this query can return data ($result is an identifier):
 		$result = mysqli_query($connection, $query);
@@ -100,11 +102,16 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 		// if there was a match then UPDATE their profile data, otherwise INSERT it:
 		if($n > 0){
 			// we need an UPDATE:
-			$query = "UPDATE profiles SET firstname='$firstname',lastname='$lastname',pets=$pets,email='$email',dob='$dob' WHERE username='$username'";
+			$query = "UPDATE profiles
+								SET firstname='$firstname',lastname='$lastname',pets=$pets,email='$email',dob='$dob'
+								WHERE username='$username'";
+
 			$result = mysqli_query($connection, $query);
 		} else {
 			// we need an INSERT:
-			$query = "INSERT INTO profiles (username,firstname,lastname,pets,email,dob) VALUES ('$username','$firstname','$lastname',$pets,'$email','$dob')";
+			$query = "INSERT INTO profiles (username,firstname,lastname,pets,email,dob)
+								VALUES ('$username','$firstname','$lastname',$pets,'$email','$dob')";
+
 			$result = mysqli_query($connection, $query);
 		}
 
@@ -146,7 +153,9 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	}
 
 	// check for a row in our profiles table with a matching username:
-	$query = "SELECT * FROM profiles WHERE username='$username'";
+	$query = "SELECT *
+						FROM profiles
+						WHERE username='$username'";
 
 	// this query can return data ($result is an identifier):
 	$result = mysqli_query($connection, $query);

@@ -68,7 +68,9 @@ elseif (isset($_POST['username']))
 	if ($errors == "")
 	{
 		// try to insert the new details:
-		$query = "INSERT INTO members (username, password) VALUES ('$username', '$password');";
+		$query = "INSERT INTO members (username, password)
+							VALUES ('$username', '$password');";
+
 		$result = mysqli_query($connection, $query);
 
 		// no data returned, we just test for true(success)/false(failure):

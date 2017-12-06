@@ -14,6 +14,36 @@ function drawDashboards() {
 // Track users selected for marketing messages.
 var users = [];
 
+$('document').ready(function(){
+  // When the notification form is submitted, post through AJAX instead.
+  $('form').submit(function(e) {
+    e.preventDefault();
+    var message = $('textarea#message').val();
+
+    $.ajax({
+      type: 'POST',
+      url: "api/developer/notifications/create.php",
+      data: {
+              message : message,
+              users: users
+            },
+      complete: function(jqXHR, textStatus) {
+        if(jqXHR.status == 201) {
+          $('div#errors').html("Your post was successful.");
+        } else {
+          $('div#errors').html("We couldn't post your notification at this time.");
+        }
+      }
+    });
+  });
+
+  // Character counting implementation for the notification textarea.
+  $('textarea').keyup(function(){
+    var chars_used = $('textarea').val().length;
+    $('span#characters').text(255 - chars_used + " left");
+  });
+});
+
 // Create a dashboard for the likes controls and chart.
 function drawLikesDashboard() {
   $.getJSON('api/developer/likes.php', function(response) {
@@ -73,29 +103,6 @@ function drawLikesDashboard() {
     }
   });
 }
-
-$('document').ready(function(){
-  $('form').submit(function(e) {
-    e.preventDefault();
-    var message = $('textarea#message').val();
-
-    $.ajax({
-      type: 'POST',
-      url: "api/developer/notifications/create.php",
-      data: {
-              message : message,
-              users: users
-            },
-      complete: function(jqXHR, textStatus) {
-        if(jqXHR.status == 201) {
-          $('div#errors').html("Your post was successful.");
-        } else {
-          $('div#errors').html("We couldn't post your notification at this time.");
-        }
-      }
-    });
-  });
-});
 
 // Create a dashboard for the pets controls and chart.
 function drawPetsDashboard() {
