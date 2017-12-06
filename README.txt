@@ -1,5 +1,7 @@
 # 2CWK50: A Social Network Documentation
 
+The PDF or markdown documents are best for viewing this documentation.
+
 ## Setup
 
 To initialise the database, visit **/create_data.php**. This script will create the `skeleton` database and corresponding tables. For further access to the database and it's contents, visit **/phpmyadmin**.
@@ -56,7 +58,7 @@ To view an individual user's profile, visit **/show_profile.php?username=QUERY**
 
 ### The Global Feed
 
-Visitors can access a global feed of user messages by visiting **/global_feed.php**. Below the message form is a list of the 5 most recent posts. In cases where there are more than 5 posts to the global feed, a button to load an additional 5 posts will appear. 
+Visitors can access a global feed of user messages by visiting **/global_feed.php**. Below the message form is a list of the 5 most recent posts. In cases where there are more than 5 posts to the global feed, a button to load an additional 5 posts will appear.
 
 The `feed` table is polled every 3 seconds to retrieve the latest posts and is used to update the feed dynamically using AJAX GET requests. Passed through to the API is a limit on how many posts to retrieve. By default this value is `5`. The **Load more posts** button will increment this limit for further calls to the API. The API used for retrieving the feed is **/api/recent.php** and data is returned as JSON. The JavaScript for this feature is handled in **/resources/js/feed.js**.
 
@@ -80,7 +82,7 @@ To unmute an abusive user, visit **/global_feed.php** and click the **unmute USE
 
 ### Graphical User Summaries
 
-The administrative account has access to the **/developer_tools.php** page. This holds several Google Charts that relate to user data and present this in a graphical format. All charts make use of APIs to retrieve this information from the database in the correct format as JSON. The APIs can be found in the **/developer** directory as **days.php**, **likes.php**, **pets.php** and **posts.php**. 
+The administrative account has access to the **/developer_tools.php** page. This holds several Google Charts that relate to user data and present this in a graphical format. All charts make use of APIs to retrieve this information from the database in the correct format as JSON. The APIs can be found in the **/developer** directory as **days.php**, **likes.php**, **pets.php** and **posts.php**.
 
 Each statistic consists of a Dashboard, Slider and Chart and all work similarly in their loading. In **/resources/js/developer.js** you will find several functions to draw each of the dashboards for each statistic. Each function retrieves the data from the corresponding API mentioned with that response, builds the charts and controls, displaying them in the `div` elements associated by ID.
 
@@ -88,11 +90,11 @@ Sliders can be used to filter this information, which is useful for the next sec
 
 ### Targeted Notifications
 
-The **User Likes** dashboard implements a feature which allows notifications to be sent to the users selected in the pie chart. To do so, a listener is added to the slider in **/resources/js/developer.js** and is executed on load and when changed. 
+The **User Likes** dashboard implements a feature which allows notifications to be sent to the users selected in the pie chart. To do so, a listener is added to the slider in **/resources/js/developer.js** and is executed on load and when changed.
 
 The handler for this listener is `filterHandler()`. This function retrieves the `DataTable` object for the pie chart which can then be used to retrieve the values of the information displayed, primarily usernames. To do this, the number of rows in the `DataTable` are retrieved using `table.getNumberOfRows()`. This value is then used to iterate through the `DataTable`, retrieve the value of the `username` column using `table.getValue(rowIndex, columnIndex)` and then append it to a global array `users`.
 
-Now that we have the usernames of the members that we'll be sending the notifications to, the administrator must enter a notification message and submit the form through **/developer_tools.php**. A notification can be a maximum of 255 characters in length as a default value. 
+Now that we have the usernames of the members that we'll be sending the notifications to, the administrator must enter a notification message and submit the form through **/developer_tools.php**. A notification can be a maximum of 255 characters in length as a default value.
 
 On submitting the form, the default behaviour of posting through the browser is prevented. Instead, the form is sent through an AJAX POST request, passing both the notification message and `users` array as data attributes. The API **/developer/notifications/create.php** will firstly attempt to insert the notification message into the `notifications` table. Afterwards, it will attempt to create a pairing of `username` and `notification_id` in the `notify_users` pivot table.
 
@@ -100,18 +102,10 @@ If successful, a notification will appear beneath the form. Else, an error messa
 
 ### Viewing Notifications
 
-Users can see their notifications on the **/global_feed.php** page below post form and above the feed itself. The query being performed on the back-end here is selecting all notifications from the `notify_users` table with a join through to `notifications` where the username matches that of the `username` session and the `seen` value in the `notify_users` table is 0 - retrieving all notifications that the user hasn't seen. 
+Users can see their notifications on the **/global_feed.php** page below post form and above the feed itself. The query being performed on the back-end here is selecting all notifications from the `notify_users` table with a join through to `notifications` where the username matches that of the `username` session and the `seen` value in the `notify_users` table is 0 - retrieving all notifications that the user hasn't seen.
 
 By using a very similar API to what is used to update the global feed, notifications are also polled and updated every three seconds. The API used for this can be found in **/api/notifications/recent.php**. The JavaScript for this feature is handled in **/resources/js/notifications.js**.
 
 ### Acknowledging Notifications
 
 Users can acknowledge their notifications on the **/global_feed.php** page by clicking the **Acknowledge** button which appears alongside each notification. In doing so an AJAX POST request to **/api/notifications/seen.php** will be made, updating the value of `seen` for that particular notification entry in the `notify_users` pivot table to 1. A call to `retrieveNotifications()` will also be made to update the listings. The JavaScript for this feature is handled in **/resources/js/notifications.js**.
-
-
-
-
-
-
-
-
