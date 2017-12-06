@@ -42,7 +42,7 @@ The back-end of **/set_profile.php** will query the database for an existing pro
 To prevent cross-site forgery requests, **/sign_in.php**, **/sign_up.php** and **/set_profile.php** implement CSRF token checking. In **/header.php** a random token is generated with the `generateCSRF` helper function and stored in the `csrf_token` session. This value is then passed as a hidden input in the aformentioned pages and checking using the `validateCSRF` helper function. On each validation, a new CSRF token is generated.
 
 ### Password Hashing
-Passwords are encrypted and checked using PHP's `password_hash()` and `password_verify()` functions and implements the bcrypt hashing algorithm.
+Passwords are hashed and checked using PHP's `password_hash()` and `password_verify()` functions and implements the bcrypt hashing algorithm.
 
 ---
 
