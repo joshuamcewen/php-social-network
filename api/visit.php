@@ -22,10 +22,8 @@
     // If the query succeeds, return a 201 created header else 400 bad request.
     if($database->rowCount() == 1) {
       header("Content-Type: application/json", NULL, 201);
-      echo "Yes.";
     } else {
       header("Content-Type: application/json", NULL, 400);
-      echo "No";
     }
 
     // Finished with the database. Nullify the database connection.

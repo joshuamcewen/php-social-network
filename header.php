@@ -11,6 +11,9 @@ require_once "config/app.php";
 require_once "classes/Connection.php";
 require_once "classes/Helper.php";
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // start/restart the session:
 session_start();
 

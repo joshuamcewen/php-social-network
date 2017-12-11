@@ -1,7 +1,7 @@
 <?php
-  require_once "../config/app.php";
-  require_once "../classes/Connection.php";
-  require_once "../classes/Helper.php";
+  require_once "../../config/app.php";
+  require_once "../../classes/Connection.php";
+  require_once "../../classes/Helper.php";
   session_start();
 
   // Create a new instance of our database connection.
