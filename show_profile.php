@@ -14,49 +14,33 @@ if (!isset($_SESSION['loggedInSkeleton']))
 else
 {
 	echo "<h2>Show Profile</h2>";
-	// connect directly to our database (notice 4th argument):
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection)
-	{
-		die("Connection failed: " . $mysqli_connect_error);
-	}
+	// If a username is supplied in the req, use it. Else retrieve the currently logged in user.
+	$username = isset($_GET['username']) ? Helper::sanitise($_GET['username']) : $_SESSION['username'];
 
-	// Retrieve URL parameter value for username key.
-	if(isset($_GET['username'])) {
-		// Sanitise and set the username.
-		$username = sanitise($_GET['username'], $connection);
-	} else {
-		// If there is not username parameter, assume they're viewing their own profile.
-		$username = $_SESSION["username"];
-	}
+	// Create a new instance of our database connection.
+	$database = new Connection();
 
 	// check for a row in our profiles table with a matching username:
 	$query = "SELECT *
 						FROM profiles
-						WHERE username='$username'";
+						WHERE username=:username";
 
-	// this query can return data ($result is an identifier):
-	$result = mysqli_query($connection, $query);
-
-	// how many rows came back? (can only be 1 or 0 because username is the primary key in our table):
-	$n = mysqli_num_rows($result);
+	// Prepare and execute the statement. Retrieve the result.
+	$database->query($query);
+	$database->bind(':username', $username);
+	$row = $database->fetch();
 
 	// if there was a match then extract their profile data:
-	if ($n > 0)
-	{
+	if ($database->rowCount() > 0) {
 		// use the identifier to fetch one row as an associative array (elements named after columns):
-		$row = mysqli_fetch_assoc($result);
 		// display their profile data:
 		echo "First name: {$row['firstname']}<br>";
 		echo "Last name: {$row['lastname']}<br>";
 		echo "Number of pets: {$row['pets']}<br>";
 		echo "Email address: {$row['email']}<br>";
 		echo "Date of birth: {$row['dob']}<br>";
-	}
-	else
-	{
+	} else {
 		// Prompt user to create a profile if viewing their own and no profile exists...
 		if($username == $_SESSION['username']) {
 			echo "You still need to set up a profile!<br>";
@@ -65,8 +49,8 @@ else
 		}
 	}
 
-	// we're finished with the database, close the connection:
-	mysqli_close($connection);
+	// Finished with the database. Nullify the database connection.
+	$database = null;
 
 }
 

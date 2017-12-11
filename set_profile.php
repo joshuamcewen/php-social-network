@@ -38,45 +38,37 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 } elseif (isset($_POST['firstname'])) {
 	// user just tried to update their profile
 
-	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
+	// Create a new instance of our database connection.
+	$database = new Connection();
 
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection)
-	{
-		die("Connection failed: " . $mysqli_connect_error);
-	}
-
-	// SANITISATION CODE MISSING:
-
-	$firstname = sanitise($_POST['firstname'], $connection);
-	$lastname = sanitise($_POST['lastname'], $connection);
-	$pets = sanitise($_POST['pets'], $connection);
-	$email = sanitise($_POST['email'], $connection);
-	$dob = sanitise($_POST['dob'], $connection);
+	$firstname = Helper::sanitise($_POST['firstname']);
+	$lastname = Helper::sanitise($_POST['lastname']);
+	$pets = Helper::sanitise($_POST['pets']);
+	$email = Helper::sanitise($_POST['email']);
+	$dob = Helper::sanitise($_POST['dob']);
 
 	// SERVER-SIDE VALIDATION CODE MISSING:
 
 	// Validate the first name
-	$firstname_val = validatePattern($firstname, '/^[A-Za-z\']{1,40}$/', "First name must be between 1 and 40 characters in length.");
+	$firstname_val = Helper::validatePattern($firstname, '/^[A-Za-z\']{1,40}$/', "First name must be between 1 and 40 characters in length.");
 
 	// Validate the last name
-	$lastname_val = validatePattern($lastname, '/^[A-Za-z\']{1,50}$/', "Last name must be between 1 and 50 characters in length.");
+	$lastname_val = Helper::validatePattern($lastname, '/^[A-Za-z\']{1,50}$/', "Last name must be between 1 and 50 characters in length.");
 
 	// Validate pets
-	$pets_val = validatePattern($pets, '/^[0-9]{1,4}$/', "Number of pets must be between 1 and 4 digits in length.<br>");
+	$pets_val = Helper::validatePattern($pets, '/^[0-9]{1,4}$/', "Number of pets must be between 1 and 4 digits in length.<br>");
 
 	// Validate email
-	$email_val = validateEmail($email);
+	$email_val = Helper::validateEmail($email);
 
 	// Validate date of birth
-	$dob_val = validatePattern($dob,
+	$dob_val = Helper::validatePattern($dob,
 									'/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/',
 									"Date of birth must be in the format YYYY-MM-DD."
 								 );
 
 	// Validate CSRF token.
-	$csrf_val = validateCSRF();
+	$csrf_val = Helper::validateCSRF();
 
 	// Concatenate error messages.
 	$errors = $firstname_val . $lastname_val . $pets_val . $email_val . $dob_val . $csrf_val;
@@ -91,29 +83,34 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 		// check to see if this user already had a favourite:
 		$query = "SELECT *
 							FROM profiles
-							WHERE username='$username'";
+							WHERE username = :username";
 
-		// this query can return data ($result is an identifier):
-		$result = mysqli_query($connection, $query);
-
-		// how many rows came back? (can only be 1 or 0 because username is the primary key in our table):
-		$n = mysqli_num_rows($result);
+		// Prepare and execute the statement. Retrieve the result.
+		$database->query($query);
+		$database->bind(':username', $username);
+		$result = $database->fetch();
 
 		// if there was a match then UPDATE their profile data, otherwise INSERT it:
-		if($n > 0){
+		if($database->rowCount() > 0){
 			// we need an UPDATE:
 			$query = "UPDATE profiles
-								SET firstname='$firstname',lastname='$lastname',pets=$pets,email='$email',dob='$dob'
-								WHERE username='$username'";
+								SET firstname=:firstname,lastname=:lastname,pets=:pets,email=:email,dob=:dob
+								WHERE username=:username";
 
-			$result = mysqli_query($connection, $query);
 		} else {
 			// we need an INSERT:
 			$query = "INSERT INTO profiles (username,firstname,lastname,pets,email,dob)
-								VALUES ('$username','$firstname','$lastname',$pets,'$email','$dob')";
-
-			$result = mysqli_query($connection, $query);
+								VALUES (':username',':firstname',':lastname',:pets,':email',':dob')";
 		}
+
+		$database->query($query);
+		$database->bind(':firstname', $firstname);
+		$database->bind(':lastname', $lastname);
+		$database->bind(':pets', $pets);
+		$database->bind(':email', $email);
+		$database->bind(':dob', $dob);
+		$database->bind(':username', $username);
+		$result = $database->execute();
 
 		// no data returned, we just test for true(success)/false(failure):
 		if($result){
@@ -132,42 +129,30 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 		$message = "Update failed, please check the errors above and try again<br>";
 	}
 
-	// we're finished with the database, close the connection:
-	mysqli_close($connection);
+	// Finished with the database. Nullify the database connection.
+	$database = null;
 
 } else {
 	// arrived at the page for the first time, show any data already in the table:
 
+	// Create a new instance of our database connection.
+	$database = new Connection();
+
 	// read the username from the session:
 	$username = $_SESSION["username"];
-
-	// now read their profile data from the table...
-
-	// connect directly to our database (notice 4th argument):
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection)
-	{
-		die("Connection failed: " . $mysqli_connect_error);
-	}
 
 	// check for a row in our profiles table with a matching username:
 	$query = "SELECT *
 						FROM profiles
-						WHERE username='$username'";
+						WHERE username=:username";
 
-	// this query can return data ($result is an identifier):
-	$result = mysqli_query($connection, $query);
-
-	// how many rows came back? (can only be 1 or 0 because username is the primary key in our table):
-	$n = mysqli_num_rows($result);
+	// Prepare and execute the statement. Retrieve the result.
+	$database->query($query);
+	$database->bind(':username', $username);
+	$row = $database->fetch();
 
 	// if there was a match then extract their profile data:
-	if ($n > 0)
-	{
-		// use the identifier to fetch one row as an associative array (elements named after columns):
-		$row = mysqli_fetch_assoc($result);
+	if ($database->rowCount() > 0) {
 		// extract their profile data for use in the HTML:
 		$firstname = $row['firstname'];
 		$lastname = $row['lastname'];
@@ -179,14 +164,13 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 	// show the set profile form:
 	$show_profile_form = true;
 
-	// we're finished with the database, close the connection:
-	mysqli_close($connection);
+	// Finished with the database. Nullify the database connection.
+	$database = null;
 
 }
 
 
-if ($show_profile_form)
-{
+if ($show_profile_form) {
 	// Set date for max value in DOB.
 	$date = date('Y-m-d');
 

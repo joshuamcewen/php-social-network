@@ -19,7 +19,7 @@
     	}
 
       // Sanitise the message contents.
-    	$message = sanitise($_POST['message'], $connection);
+    	$message = Helper::sanitise($_POST['message'], $connection);
 
       // Query to insert the notification into the notifications table.
       $query = "INSERT INTO notifications (message)

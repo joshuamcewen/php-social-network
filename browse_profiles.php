@@ -14,44 +14,34 @@ if (!isset($_SESSION['loggedInSkeleton']))
 else
 {
 	echo "<h2>Browse Profiles</h2>";
-	// Make a connection
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
 
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection)
-	{
-		die("Connection failed: " . $mysqli_connect_error);
-	}
+	// Create a new instance of our database connection.
+	$database = new Connection();
 
 	// Retrieve all existing user profiles
 	$query = "SELECT username, firstname, lastname
 						FROM profiles
 						ORDER BY username";
 
-	// Execute the query and return the results.
-	$result = mysqli_query($connection, $query);
-
-	// how many rows came back? (can only be 1 or 0 because username is the primary key in our table):
-	$n = mysqli_num_rows($result);
+	// Prepare and execute the statement. Retrieve the result.
+	$database->query($query);
+	$result = $database->fetchAll();
 
 	// if there was a match then list their profile links.
-	if ($n > 0)
-	{
-		// For each row that is returned, fetch as an associative array for printing.
-		while($row = mysqli_fetch_assoc($result)){
+	if ($database->rowCount() > 0) {
+		// For each row returned, print the user information.
+		foreach($result as $row){
 			// display their profile data:
 			echo "<li>";
 			echo "<a href='show_profile.php?username={$row['username']}'>{$row['firstname']} {$row['lastname']}</a>";
 			echo "</li>";
 		}
-	}
-	else
-	{
+	} else {
 		echo "No profiles exist.";
 	}
 
-	// we're finished with the database, close the connection:
-	mysqli_close($connection);
+	// Finished with the database. Nullify the database connection.
+	$database = null;
 }
 
 // finish off the HTML for this page:

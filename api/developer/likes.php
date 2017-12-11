@@ -1,17 +1,11 @@
 <?php
-  // database connection details:
-  require_once "../../credentials.php";
+require_once "../config/app.php";
+require_once "../classes/Connection.php";
+require_once "../classes/Helper.php";
   session_start();
 
-  // connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection)
-	{
-		header("Content-Type: application/json", NULL, 500);
-    exit;
-	}
+  // Create a new instance of our database connection.
+	$database = new Connection();
 
 	// Retrieve users and the number of likes on their posts.
 	$query = "SELECT m.username AS 'username', COUNT(l.post_id) AS 'likes'
@@ -21,10 +15,9 @@
             GROUP BY m.username
             ORDER BY likes DESC";
 
-	$result = mysqli_query($connection, $query);
-
-	// Count the rows for reference
-	$n = mysqli_num_rows($result);
+  // Prepare and execute the statement. Retrieve the result.
+  $database->query($query);
+  $result = $database->fetchAll();
 
   // Create an array for columns.
   $cols = [
@@ -36,8 +29,8 @@
   $rows = [];
 
   // If a user exists, add them to the array in Google Chart's expected format.
-	if($n > 0) {
-    while($row = mysqli_fetch_assoc($result)) {
+	if($database->rowCount() > 0) {
+    foreach($result as $row) {
       $rows[] = [
           'c' => [
                   [
@@ -53,8 +46,8 @@
     }
 	}
 
-  // Close the connection, it's no longer required.
-  mysqli_close($connection);
+  // Finished with the database. Nullify the database connection.
+	$database = null;
 
   // Print the JSON out for parsing by JavaScript.
   header("Content-Type: application/json", NULL, 200);

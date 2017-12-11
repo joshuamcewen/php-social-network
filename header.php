@@ -6,38 +6,38 @@
 // ... And, if they are logged in, whether or not they are the admin
 // It also reads in the credentials for our database connection from credentials.php
 // database connection details:
-require_once "credentials.php";
+require_once "config/app.php";
 
-// our helper functions:
-require_once "helper.php";
+require_once "classes/Connection.php";
+require_once "classes/Helper.php";
 
 // start/restart the session:
 session_start();
 
 // Set a single use CSRF token to prevent forgery/multiple form submission.
 if(!isset($_SESSION['csrf_token'])) {
-	generateCSRF();
+	Helper::generateCSRF();
 }
 
 if (isset($_SESSION['loggedInSkeleton']))
 {
 
-	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection) {
-		die("Connection failed: " . $mysqli_connect_error);
-	}
+	// Create a new instance of our database connection.
+	$database = new Connection();
 
 	// Retrieve number of posts made since last login (or 0000-00-00 00:00:00 if never logged in).
 	$query = "SELECT COUNT(*) AS 'Total'
 						FROM feed
 						WHERE posted_at > IFNULL((SELECT last_visit FROM members WHERE username = '{$_SESSION['username']}'), '0000-00-00 00:00:00')";
 
-	$result = mysqli_query($connection, $query);
+	$database->query($query);
+	$result = $database->fetch();
 
-	$unseen = mysqli_fetch_assoc($result)['Total'];
+	$unseen = $result['Total'];
+
+	// Finished with the database. Nullify the database connection.
+	// Can't assume that a connection will be required in the pages header.php is used?
+	$database = null;
 
 	// If there's more than 'new' post, display a badge.
 	$notification = ($unseen > 0 ? "<span class='badge'>$unseen</span>" : "");

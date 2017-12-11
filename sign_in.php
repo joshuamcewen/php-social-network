@@ -40,28 +40,22 @@ elseif (isset($_POST['username']))
 {
 	// user has just tried to log in:
 
-	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection)
-	{
-		die("Connection failed: " . $mysqli_connect_error);
-	}
+	// Create a new instance of our database connection.
+	$database = new Connection();
 
 	// SANITISATION (see helper.php for the function definition)
 
 	// take copies of the credentials the user submitted and sanitise (clean) them:
-	$username = sanitise($_POST['username'], $connection);
-	$password = sanitise($_POST['password'], $connection);
+	$username = Helper::sanitise($_POST['username']);
+	$password = Helper::sanitise($_POST['password']);
 
 	// VALIDATION (see helper.php for the function definitions)
 
 	// now validate the data (both strings must be between 1 and 16 characters long):
 	// (reasons: we don't want empty credentials, and we used VARCHAR(16) in the database table)
-	$username_val = validateString($username, 1, 16);
-	$password_val = validateString($password, 1, 32);
-	$csrf_val = validateCSRF();
+	$username_val = Helper::validateString($username, 1, 16);
+	$password_val = Helper::validateString($password, 1, 32);
+	$csrf_val = Helper::validateCSRF();
 
 	// concatenate all the validation results together ($errors will only be empty if ALL the data is valid):
 	$errors = $username_val . $password_val . $csrf_val;
@@ -72,19 +66,16 @@ elseif (isset($_POST['username']))
 		// Check for a row where username and password both exist, suggesting a correct login.
 		$query = "SELECT *
 							FROM members
-							WHERE username='$username'";
+							WHERE username = :username";
 
-		// this query can return data ($result is an identifier):
-		$result = mysqli_query($connection, $query);
-
-		// Count the number of rows, 1 being a match, 0 being an incorrect login.
-		$n = mysqli_num_rows($result);
+		// Prepare and execute the statement. Retrieve the result.
+		$database->query($query);
+		$database->bind(':username', $username);
+		$row = $database->fetch();
 
 		// if there was a match then set the session variables and display a success message:
-		if ($n > 0)
+		if ($database->rowCount() > 0)
 		{
-			$row = mysqli_fetch_assoc($result);
-
 			// If the password matches the hash (correct login)...
 			if(password_verify($password, $row['password'])) {
 				// set a session variable to record that this user has successfully logged in:
@@ -118,8 +109,8 @@ elseif (isset($_POST['username']))
 		$message = "Sign in failed, please check the errors shown above and try again<br>";
 	}
 
-	// we're finished with the database, close the connection:
-	mysqli_close($connection);
+	// Finished with the database. Nullify the database connection.
+	$database = null;
 
 }
 else

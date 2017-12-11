@@ -33,45 +33,46 @@ echo <<<_END
 	 </form>
 _END;
 
-	// connect directly to our database (notice 4th argument) we need the connection for sanitisation:
-	$connection = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-
-	// if the connection fails, we need to know, so allow this exit:
-	if (!$connection) {
-		die("Connection failed: " . $mysqli_connect_error);
-	}
+	// Create a new instance of our database connection.
+	$database = new Connection();
 
 	// Update the last visit time, used for new posts notification
-	$query = "UPDATE members SET last_visit = NOW() WHERE username = '{$_SESSION['username']}'";
-	mysqli_query($connection, $query);
+	$query = "UPDATE members SET last_visit = NOW() WHERE username = :username";
+	$database->query($query);
+	$database->bind(':username', $_SESSION['username']);
+	$database->execute();
 
 	// If message post data exists, attempt to add a new message to the feed
 	if(isset($_POST['message'])) {
 
 		// Check whether or not the current user is muted.
-		$query = "SELECT muted FROM members WHERE username = '{$_SESSION['username']}'";
-		$result = mysqli_query($connection, $query);
-
-		$row = mysqli_fetch_assoc($result);
+		$query = "SELECT muted FROM members WHERE username = :username";
+		$database->query($query);
+		$database->bind(':username', $_SESSION['username']);
+		$row = $database->fetch();
 
 		// If they're not muted, continue with posting. Else, display an error.
 		if($row['muted'] == 0) {
 			// Sanitise the user input
-			$username = sanitise($_SESSION['username'], $connection);
-			$message = sanitise($_POST['message'], $connection);
+			$username = Helper::sanitise($_SESSION['username']);
+			$message = Helper::sanitise($_POST['message']);
 
 			// Blank error string by default.
 			$errors = "";
 
 			// Validate the feed message.
-			$errors.= validateString($message, 1, 140);
+			$errors.= Helper::validateString($message, 1, 140);
 
 			// Validate CSRF token.
-			$errors .= validateCSRF();
+			$errors .= Helper::validateCSRF();
 
 			if($errors == "") {
-				$query = "INSERT INTO feed(username, message) VALUES('$username', '$message')";
-				$result = mysqli_query($connection, $query);
+				// Insert the message into the feed table.
+				$query = "INSERT INTO feed(username, message) VALUES(:username, :message)";
+				$database->query($query);
+				$database->bind(':username', $username);
+				$database->bind(':message', $message);
+			  $result = $database->execute();
 
 				if($result) {
 					echo "<div class='notification'>Post was successful.</div>";
@@ -93,10 +94,8 @@ _END;
 		$query = "SELECT username
 							FROM members
 							WHERE muted = 1";
-							
-		$result = mysqli_query($connection, $query);
-
-		$n = mysqli_num_rows($result);
+		$database->query($query);
+		$result = $database->fetchAll();
 
 		// Display admin panel
 		echo "
@@ -106,8 +105,8 @@ _END;
 		";
 
 		// If there are muted users, display them.
-		if($n > 0) {
-			while($row = mysqli_fetch_assoc($result)) {
+		if($database->rowCount() > 0) {
+			foreach($result as $row) {
 				echo "<li><a href='unmute_user.php?username={$row['username']}'>Unmute {$row['username']}</a></li>";
 			}
 		} else {
@@ -127,15 +126,12 @@ _END;
 						WHERE username = '{$_SESSION['username']}' AND seen = 0
 						ORDER BY n.notification_id DESC
 						LIMIT 5";
-
-	$result = mysqli_query($connection, $query);
-
-	// Count the rows for reference
-	$n = mysqli_num_rows($result);
+	$database->query($query);
+	$result = $database->fetchAll();
 
 	echo "<ul id='notifications'>";
-	if($n > 0) {
-		while($row = mysqli_fetch_assoc($result)){
+	if($database->rowCount() > 0) {
+		foreach($result as $row){
 			echo "
 				<li>
 					{$row['message']}
@@ -151,16 +147,13 @@ _END;
 						FROM feed
 						ORDER BY posted_at DESC
 						LIMIT 5";
-
-	$result = mysqli_query($connection, $query);
-
-	// Count the rows for reference
-	$n = mysqli_num_rows($result);
+	$database->query($query);
+	$result = $database->fetchAll();
 
 	echo "<ul id='posts'>";
-	if($n > 0) {
+	if($database->rowCount() > 0) {
 		// For each message retrieved, fetch as an associative array.
-		while($row = mysqli_fetch_assoc($result)){
+		foreach($result as $row){
 			// display the message.
 			echo "
 				<li>
@@ -190,8 +183,8 @@ _END;
 	echo "</ul>";
 	echo "<div id='options'></div>";
 
-	// Close the connection, it's no longer required.
-	mysqli_close($connection);
+	// Finished with the database. Nullify the database connection.
+	$database = null;
 }
 
 // finish off the HTML for this page:
