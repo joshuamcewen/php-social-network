@@ -54,7 +54,7 @@ function drawLikesDashboard() {
           'containerId': 'likes_slider',
           'options': {
             'filterColumnLabel': 'Total Likes',
-            'ui': {'labelStacking': 'vertical'}
+            'ui': {'labelStacking': 'vertical'},
           }
         });
 
@@ -64,7 +64,8 @@ function drawLikesDashboard() {
       'containerId': 'likes_chart',
       'options': {
         'width': 500,
-        'height': 240
+        'height': 240,
+        'is3D' : true
       }
     });
 
@@ -88,7 +89,7 @@ function drawLikesDashboard() {
 
       // Clear the display message in the notification form.
       $('#users').html('Notification will be sent to ');
- 
+
       // For each data value, get the username property.
       for(var i = 0; i < rows; i++) {
         var username = table.getValue(i, 0);
@@ -155,7 +156,8 @@ function drawPostsDashboard() {
       'containerId': 'posts_chart',
       'options': {
         'width': 500,
-        'height': 240
+        'height': 240,
+        'is3D' : true
       }
     });
 
