@@ -9,12 +9,12 @@
 // NOTE: this last one is VERY IMPORTANT - you need to include test data that enables the markers to test all of your site's functionality
 
 // read in the details of our MySQL server:
-require_once "credentials.php";
+require_once "config/app.php";
 
 // We'll use the procedural (rather than object oriented) mysqli calls
 
 // connect to the host:
-$connection = mysqli_connect($dbhost, $dbuser, $dbpass);
+$connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS);
 
 // exit the script with a useful message if there was an error:
 if (!$connection)
@@ -23,7 +23,7 @@ if (!$connection)
 }
 
 // build a statement to create a new database:
-$sql = "CREATE DATABASE IF NOT EXISTS " . $dbname;
+$sql = "CREATE DATABASE IF NOT EXISTS " . DB_NAME;
 
 // no data returned, we just test for true(success)/false(failure):
 if (mysqli_query($connection, $sql))
@@ -36,8 +36,7 @@ else
 }
 
 // connect to our database:
-mysqli_select_db($connection, $dbname);
-
+mysqli_select_db($connection, DB_NAME);
 
 // Drop tables
 

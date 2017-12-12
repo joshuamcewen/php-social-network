@@ -100,7 +100,7 @@ if (!isset($_SESSION['loggedInSkeleton'])) {
 		} else {
 			// we need an INSERT:
 			$query = "INSERT INTO profiles (username,firstname,lastname,pets,email,dob)
-								VALUES (':username',':firstname',':lastname',:pets,':email',':dob')";
+								VALUES (:username,:firstname,:lastname,:pets,:email,:dob)";
 		}
 
 		$database->query($query);
